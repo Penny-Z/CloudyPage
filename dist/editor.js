@@ -3,6 +3,19 @@
 (() => {
   const $ = id => document.getElementById(id);
   const rich = $('richEditor'), source = $('markdownEditor'), pages = $('pages'), stage = $('previewStage');
+  let currentScreen = null;
+  function syncScreen() {
+    const nextScreen = location.hash === '#editor' ? 'editor' : 'home';
+    if (nextScreen === currentScreen) return;
+    currentScreen = nextScreen;
+    $('homeScreen').hidden = nextScreen === 'editor';
+    $('appScreen').hidden = nextScreen !== 'editor';
+    document.body.classList.toggle('editor-open', nextScreen === 'editor');
+    document.title = nextScreen === 'editor' ? 'CloudyPage 云中笺 · 排版器' : 'CloudyPage 云中笺 · 把笔记整理成一页';
+    window.scrollTo(0, 0);
+    if (nextScreen === 'editor') requestAnimationFrame(render);
+  }
+  window.addEventListener('hashchange', syncScreen);
   const key = 'zhijian-cheatsheet-v2';
   const oldKey = 'zhijian-cheatsheet-v1';
   const state = { orientation:'landscape', columns:'auto', font:7, margin:0, line:1.6, zoom:1, sourceMode:false };
@@ -378,6 +391,6 @@
     state.orientation=stored?.orientation==='portrait'?'portrait':'landscape';
     state.columns=stored?.columns||'auto'; state.font=stored?.font??7; state.margin=stored?.margin??0; state.line=stored?.line??1.6;
   } catch { rich.innerHTML=markdownToHtml(exampleMarkdown); showingExample=true; }
-  syncControls(); render();
+  syncControls(); syncScreen();
   if (document.fonts?.ready) document.fonts.ready.then(render);
 })();
