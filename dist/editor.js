@@ -696,20 +696,42 @@
   document.querySelectorAll('[data-block]').forEach(button=>button.addEventListener('click',()=>{ rich.focus(); document.execCommand('formatBlock',false,button.dataset.block); schedule(); }));
   $('linkBtn').addEventListener('click',()=>{ const url=prompt('链接地址（https://…）'); if (url && /^https?:\/\//i.test(url)) { rich.focus(); document.execCommand('createLink',false,url); schedule(); } });
   $('codeBtn').addEventListener('click',()=>{ const selected=window.getSelection()?.toString()||'代码'; rich.focus(); document.execCommand('insertHTML',false,`<code>${escapeHtml(selected)}</code>`); schedule(); });
-  function insertFormula(displayMode) {
-    const selected=selectionInEditor()?.toString().trim()||'\\frac{a}{b}';
-    const latex=prompt('输入 LaTeX 公式（例如：\\frac{a}{b}）：',selected);
-    if (!latex?.trim()) return;
-    rich.focus(); document.execCommand('insertHTML',false,formulaHtml(latex,displayMode)); schedule();
+  let formulaTarget=null, formulaRange=null;
+  function updateFormulaPreview() {
+    const latex=$('formulaInput').value.trim();
+    $('formulaPreview').innerHTML=latex?formulaHtml(latex,$('formulaDisplay').checked):'<span>输入公式后显示预览</span>';
   }
-  $('mathInlineBtn').addEventListener('click',()=>insertFormula(false));
-  $('mathBlockBtn').addEventListener('click',()=>insertFormula(true));
+  function openFormulaDialog(displayMode,target=null) {
+    formulaTarget=target;
+    const selection=target?null:selectionInEditor();
+    formulaRange=selection?selection.getRangeAt(0).cloneRange():null;
+    $('formulaInput').value=target?.getAttribute('data-latex')||selection?.toString().trim()||'\\frac{a}{b}';
+    $('formulaDisplay').checked=target?target.classList.contains('math-block'):displayMode;
+    updateFormulaPreview(); $('formulaDialog').showModal(); $('formulaInput').focus(); $('formulaInput').select();
+  }
+  $('mathInlineBtn').addEventListener('click',()=>openFormulaDialog(false));
+  $('mathBlockBtn').addEventListener('click',()=>openFormulaDialog(true));
+  $('formulaInput').addEventListener('input',updateFormulaPreview);
+  $('formulaDisplay').addEventListener('change',updateFormulaPreview);
+  $('formulaCancelBtn').addEventListener('click',()=>$('formulaDialog').close());
+  $('formulaInsertBtn').addEventListener('click',()=>{
+    const latex=$('formulaInput').value.trim();
+    if (!latex) { $('formulaInput').focus(); return; }
+    const html=formulaHtml(latex,$('formulaDisplay').checked);
+    if (formulaTarget?.isConnected) formulaTarget.outerHTML=html;
+    else {
+      rich.focus();
+      if (formulaRange && rich.contains(formulaRange.commonAncestorContainer)) {
+        const selection=window.getSelection(); selection.removeAllRanges(); selection.addRange(formulaRange);
+      }
+      document.execCommand('insertHTML',false,html);
+    }
+    $('formulaDialog').close(); showingExample=false; schedule();
+  });
   rich.addEventListener('dblclick',event=>{
     const formula=event.target.closest('[data-latex]');
     if (!formula || !rich.contains(formula)) return;
-    const latex=prompt('修改 LaTeX 公式：',formula.getAttribute('data-latex'));
-    if (latex===null || !latex.trim()) return;
-    formula.outerHTML=formulaHtml(latex,formula.classList.contains('math-block')); schedule();
+    openFormulaDialog(formula.classList.contains('math-block'),formula);
   });
   $('tableBtn').addEventListener('click',()=>{ rich.focus(); document.execCommand('insertHTML',false,'<table><thead><tr><th>概念</th><th>说明</th></tr></thead><tbody><tr><td>示例</td><td>内容</td></tr></tbody></table><p><br></p>'); schedule(); });
   $('columnBreakBtn').addEventListener('click',()=>{ rich.focus(); document.execCommand('insertHTML',false,'<div data-column-break contenteditable="false"></div><p><br></p>'); schedule(); });

@@ -132,6 +132,15 @@
     <p>当前编辑内容已自动保存在此浏览器。另存为命名草稿后，还能在草稿箱中单独找到这一版。</p>
     <div class="leave-actions"><button id="cancelLeaveBtn" type="button">继续编辑</button><button id="leaveWithoutDraftBtn" type="button">直接离开</button><button id="saveAndLeaveBtn" type="button">保存草稿并离开</button></div>
   </dialog>
+  <dialog id="formulaDialog" class="formula-dialog" aria-labelledby="formulaTitle">
+    <h2 id="formulaTitle">插入公式</h2>
+    <p>输入 LaTeX，例如 <code>\frac{a}{b}</code>、<code>x^2</code>。公式会显示在编辑区和打印预览中。</p>
+    <label for="formulaInput">公式内容</label>
+    <textarea id="formulaInput" rows="3" spellcheck="false"></textarea>
+    <label class="formula-display-choice"><input id="formulaDisplay" type="checkbox"> 独立成行</label>
+    <div id="formulaPreview" class="formula-preview" aria-label="公式预览"></div>
+    <div class="formula-actions"><button id="formulaCancelBtn" type="button">取消</button><button id="formulaInsertBtn" type="button">插入公式</button></div>
+  </dialog>
   <script src="vendor/katex.min.js"></script>
   <script src="editor.js"></script>
 </body>
