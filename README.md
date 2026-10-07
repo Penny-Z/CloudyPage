@@ -4,7 +4,7 @@
 
 ## 使用
 
-下载本仓库后，打开 `dist/index.html`。`dist/editor.css` 和 `dist/editor.js` 需要与它保存在同一目录。也可以只下载 `dist/standalone.html`，它把页面、样式和脚本放在同一个文件中。无需安装依赖，也无需联网。
+下载本仓库后，打开 `dist/index.html`。`dist/editor.css` 和 `dist/editor.js` 需要与它保存在同一目录。也可以只下载 `dist/standalone.html`，它把页面、样式和脚本放在同一个文件中。首页点击“立即使用”即可进入排版器；在排版器左上角点击名称可返回首页。无需安装依赖，也无需联网。
 
 - 在左侧编辑区粘贴 Markdown；替换整篇时先在编辑区按 `Ctrl+A`，再粘贴。
 - 用“文字”工具栏设置标题、列表、颜色和高亮；用“布局”工具栏调整多栏排版。
@@ -17,7 +17,7 @@
 
 复制或分发本项目及其修改版时，请一并提供许可条款或其网址，并保留 [`NOTICE`](NOTICE) 中以 `Required Notice:` 开头的署名行。修改版请明确标识修改者及修改内容，不要让使用者误认为它是原作者发布的版本。
 
-项目名称与图标的使用说明见 [`BRANDING.md`](BRANDING.md)。如需商业授权，请通过此仓库的 Issues 联系维护者；创建仓库后可在 GitHub 上使用此方式。
+项目名称与图标的使用说明见 [`BRANDING.md`](BRANDING.md)。如需商业授权，请通过 [Issues](https://github.com/Penny-Z/CloudyPage/issues) 联系维护者。
 
 欢迎用 Issues 反馈问题或提出建议。外部代码贡献的版权授权方式尚未确定，暂不接收 Pull Request；这不影响你在许可范围内自行修改和分发自己的版本。
 
@@ -29,4 +29,3 @@
 - `dist/standalone.html`：可单独下载使用的离线版本；由 `python scripts/build_standalone.py` 生成
 - `LICENSE.md`：PolyForm Noncommercial 1.0.0 正式条款
 - `NOTICE`：需要随副本保留的署名
-
