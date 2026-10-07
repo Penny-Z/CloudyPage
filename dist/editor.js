@@ -135,7 +135,8 @@
   const oldKey = 'zhijian-cheatsheet-v1';
   const draftsKey = 'cloudypage-drafts-v1';
   const exampleVersion = 3;
-  const state = { orientation:'landscape', columns:'auto', font:7, margin:0, line:1.6, zoom:1, sourceMode:false };
+  const paperSizes = { A3:[297,420], A4:[210,297], A5:[148,210], B5:[176,250], Letter:[215.9,279.4] };
+  const state = { paperSize:'A4', orientation:'landscape', columns:'auto', font:7, margin:0, line:1.6, zoom:1, sourceMode:false };
   const exampleMarkdown = `# 数据分析与机器学习速查
 
 ## 基础
@@ -522,22 +523,23 @@
     $('fontValue').textContent = `${Number(state.font).toFixed(1)} pt`;
     $('marginValue').textContent = `${state.margin} mm`;
     $('lineValue').textContent = Number(state.line).toFixed(2);
+    document.querySelectorAll('[data-paper-size]').forEach(button => button.setAttribute('aria-pressed', String(button.dataset.paperSize === state.paperSize)));
     document.querySelectorAll('[data-orientation]').forEach(button => button.setAttribute('aria-pressed', String(button.dataset.orientation === state.orientation)));
     document.querySelectorAll('[data-columns]').forEach(button => button.setAttribute('aria-pressed', String(button.dataset.columns === state.columns)));
   }
   function save() {
-    try { localStorage.setItem(key, JSON.stringify({ html:rich.innerHTML, orientation:state.orientation, columns:state.columns, font:state.font, margin:state.margin, line:state.line, exampleVersion:rich.innerHTML===exampleHtml?exampleVersion:null })); $('saveStatus').textContent = '● 已自动保存'; return true; }
+    try { localStorage.setItem(key, JSON.stringify({ html:rich.innerHTML, paperSize:state.paperSize, orientation:state.orientation, columns:state.columns, font:state.font, margin:state.margin, line:state.line, exampleVersion:rich.innerHTML===exampleHtml?exampleVersion:null })); $('saveStatus').textContent = '● 已自动保存'; return true; }
     catch { $('saveStatus').textContent = '● 无法保存到浏览器'; return false; }
   }
   function readDrafts() {
     try { const drafts=JSON.parse(localStorage.getItem(draftsKey)||'[]'); return Array.isArray(drafts)?drafts:[]; }
     catch { return []; }
   }
-  function currentDraftState() { return {html:rich.innerHTML,orientation:state.orientation,columns:state.columns,font:state.font,margin:state.margin,line:state.line}; }
-  function draftSignature(draft) { return JSON.stringify([draft.html,draft.orientation,draft.columns,draft.font,draft.margin,draft.line]); }
+  function currentDraftState() { return {html:rich.innerHTML,paperSize:state.paperSize,orientation:state.orientation,columns:state.columns,font:state.font,margin:state.margin,line:state.line}; }
+  function draftSignature(draft) { return JSON.stringify([draft.html,draft.paperSize||'A4',draft.orientation,draft.columns,draft.font,draft.margin,draft.line]); }
   function hasUnsavedDraft() {
     const current=currentDraftState();
-    const defaultExample=current.html===exampleHtml && current.orientation==='landscape' && current.columns==='auto' && current.font===7 && current.margin===0 && current.line===1.6;
+    const defaultExample=current.html===exampleHtml && current.paperSize==='A4' && current.orientation==='landscape' && current.columns==='auto' && current.font===7 && current.margin===0 && current.line===1.6;
     return !defaultExample && !readDrafts().some(draft=>draftSignature(draft)===draftSignature(current));
   }
   function updateDraftsButton() { $('openDraftsBtn').textContent=`草稿箱 (${readDrafts().length})`; }
@@ -569,7 +571,7 @@
     const title=prompt('给这份草稿起个名字：',suggested);
     if (title===null) return false;
     const drafts=readDrafts();
-    drafts.unshift({ id:`${Date.now()}-${Math.random().toString(36).slice(2,8)}`, title:title.trim()||'未命名草稿', html:rich.innerHTML, orientation:state.orientation, columns:state.columns, font:state.font, margin:state.margin, line:state.line, updatedAt:new Date().toISOString() });
+    drafts.unshift({ id:`${Date.now()}-${Math.random().toString(36).slice(2,8)}`, title:title.trim()||'未命名草稿', html:rich.innerHTML, paperSize:state.paperSize, orientation:state.orientation, columns:state.columns, font:state.font, margin:state.margin, line:state.line, updatedAt:new Date().toISOString() });
     try {
       localStorage.setItem(draftsKey,JSON.stringify(drafts)); save(); renderDrafts();
       $('saveStatus').textContent='● 草稿已另存'; if (showList) $('draftsDialog').showModal();
@@ -590,15 +592,15 @@
     flow.innerHTML = html;
     return flow;
   }
-  function page(number, pageCount, html, columns, width, height, scale, gap, marginPx, contentW, contentH) {
+  function page(number, pageCount, html, columns, width, height, widthMm, heightMm, scale, gap, marginPx, contentW, contentH) {
     const shell = document.createElement('div'); shell.className = 'page-shell';
     shell.style.width = `${width * scale}px`; shell.style.height = `${height * scale}px`;
-    shell.style.setProperty('--paper-w', `${state.orientation === 'landscape' ? 297 : 210}mm`);
-    shell.style.setProperty('--paper-h', `${state.orientation === 'landscape' ? 210 : 297}mm`);
+    shell.style.setProperty('--paper-w', `${widthMm}mm`);
+    shell.style.setProperty('--paper-h', `${heightMm}mm`);
     const sheet = document.createElement('article'); sheet.className = 'page';
     sheet.style.width = `${width}px`; sheet.style.height = `${height}px`; sheet.style.transform = `scale(${scale})`;
-    sheet.style.setProperty('--paper-w', `${state.orientation === 'landscape' ? 297 : 210}mm`);
-    sheet.style.setProperty('--paper-h', `${state.orientation === 'landscape' ? 210 : 297}mm`);
+    sheet.style.setProperty('--paper-w', `${widthMm}mm`);
+    sheet.style.setProperty('--paper-h', `${heightMm}mm`);
     sheet.style.setProperty('--page-margin', `${marginPx}px`);
     const inner = document.createElement('div'); inner.className = 'page-inner';
     const clip = document.createElement('div'); clip.className = 'sheet-clip';
@@ -612,7 +614,9 @@
   function render() {
     renderFrame = 0;
     const landscape = state.orientation === 'landscape';
-    const width = landscape ? 1123 : 794, height = landscape ? 794 : 1123;
+    const [shortMm,longMm] = paperSizes[state.paperSize];
+    const widthMm = landscape ? longMm : shortMm, heightMm = landscape ? shortMm : longMm;
+    const width = Math.round(widthMm * 96 / 25.4), height = Math.round(heightMm * 96 / 25.4);
     const marginPx = state.margin * 96 / 25.4;
     const gap = Math.max(9, state.font * 1.55);
     const usable = width - marginPx * 2;
@@ -624,7 +628,7 @@
     $('zoomValue').textContent = `${Math.round(scale*100)}%`;
     let printStyle = $('printPageStyle');
     if (!printStyle) { printStyle = document.createElement('style'); printStyle.id = 'printPageStyle'; document.head.appendChild(printStyle); }
-    printStyle.textContent = `@page{size:A4 ${state.orientation};margin:0}`;
+    printStyle.textContent = `@page{size:${widthMm}mm ${heightMm}mm;margin:0}`;
     pages.replaceChildren();
     const contentW = width - 2 * marginPx;
     const contentH = height - 2 * marginPx - 13;
@@ -635,8 +639,8 @@
     measure.remove();
     const stride = contentW + gap;
     const pageCount = Math.max(1, Math.ceil((fullWidth + gap - 1) / stride));
-    for (let number = 1; number <= pageCount; number++) page(number,pageCount,html,columns,width,height,scale,gap,marginPx,contentW,contentH);
-    $('layoutSummary').textContent = `A4 ${landscape?'横向':'纵向'} · ${columns} 栏 · 顺序填栏 · ${pageCount} 页`;
+    for (let number = 1; number <= pageCount; number++) page(number,pageCount,html,columns,width,height,widthMm,heightMm,scale,gap,marginPx,contentW,contentH);
+    $('layoutSummary').textContent = `${state.paperSize} ${landscape?'横向':'纵向'} · ${columns} 栏 · 顺序填栏 · ${pageCount} 页`;
     $('charCount').textContent = `${rich.textContent.replace(/\s/g,'').length} 字`;
   }
 
@@ -693,6 +697,7 @@
   });
   rich.addEventListener('input',()=>{ showingExample=false; schedule(); });
   source.addEventListener('input',()=>{ sourceDirty=true; showingExample=false; rich.innerHTML=markdownToHtml(source.value); schedule(); });
+  document.querySelectorAll('[data-paper-size]').forEach(button=>button.addEventListener('click',()=>{ state.paperSize=button.dataset.paperSize; syncControls(); schedule(); }));
   document.querySelectorAll('[data-orientation]').forEach(button=>button.addEventListener('click',()=>{ state.orientation=button.dataset.orientation; syncControls(); schedule(); }));
   document.querySelectorAll('[data-columns]').forEach(button=>button.addEventListener('click',()=>{ state.columns=button.dataset.columns; syncControls(); schedule(); }));
   [['fontSlider','font'],['marginSlider','margin'],['lineSlider','line']].forEach(([id,field])=>$(id).addEventListener('input',()=>{ state[field]=Number($(id).value); syncControls(); schedule(); }));
@@ -716,14 +721,14 @@
     const drafts=readDrafts();
     if (example) {
       if (hasUnsavedDraft() && !confirm('载入内置示例会替换当前编辑区。继续吗？')) return;
-      save(); rich.innerHTML=exampleHtml; state.orientation='landscape'; state.columns='auto';
+      save(); rich.innerHTML=exampleHtml; state.paperSize='A4'; state.orientation='landscape'; state.columns='auto';
       state.font=7; state.margin=0; state.line=1.6; showingExample=true; sourceDirty=false;
       if (state.sourceMode) source.value=exampleMarkdown;
       syncControls(); schedule(); $('draftsDialog').close();
     } else if (open) {
       const draft=drafts.find(item=>item.id===open.dataset.openDraft);
       if (!draft || !confirm(`打开“${draft.title}”会替换当前编辑区。继续吗？`)) return;
-      save(); rich.innerHTML=draft.html; state.orientation=draft.orientation||'landscape'; state.columns=draft.columns||'auto';
+      save(); rich.innerHTML=draft.html; state.paperSize=paperSizes[draft.paperSize]?draft.paperSize:'A4'; state.orientation=draft.orientation||'landscape'; state.columns=draft.columns||'auto';
       state.font=draft.font??7; state.margin=draft.margin??0; state.line=draft.line??1.6;
       showingExample=rich.innerHTML===exampleHtml; sourceDirty=false;
       if (state.sourceMode) source.value=htmlToMarkdown(rich);
@@ -750,6 +755,7 @@
     else if (stored?.html) { rich.innerHTML=stored.html; showingExample=stored.exampleVersion===exampleVersion; }
     else if (previous?.markdown) rich.innerHTML=markdownToHtml(`${previous.title?`# ${previous.title}\n\n`:''}${previous.markdown}`);
     else { rich.innerHTML=exampleHtml; showingExample=true; }
+    state.paperSize=paperSizes[stored?.paperSize]?stored.paperSize:'A4';
     state.orientation=stored?.orientation==='portrait'?'portrait':'landscape';
     state.columns=stored?.columns||'auto'; state.font=stored?.font??7; state.margin=stored?.margin??0; state.line=stored?.line??1.6;
     if (legacyExample) save();
