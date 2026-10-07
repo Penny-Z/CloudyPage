@@ -1026,13 +1026,17 @@ button { cursor:pointer; }
     if (formulaTarget?.isConnected) formulaTarget.outerHTML=html;
     else {
       rich.focus();
+      const selection=window.getSelection();
+      let range;
       if (formulaRange && rich.contains(formulaRange.commonAncestorContainer)) {
-        const selection=window.getSelection(); selection.removeAllRanges(); selection.addRange(formulaRange);
+        range=formulaRange;
       } else {
-        const range=document.createRange(); range.selectNodeContents(rich); range.collapse(false);
-        const selection=window.getSelection(); selection.removeAllRanges(); selection.addRange(range);
+        range=document.createRange(); range.selectNodeContents(rich); range.collapse(false);
       }
-      document.execCommand('insertHTML',false,html);
+      const template=document.createElement('template'); template.innerHTML=html;
+      const node=template.content.firstElementChild;
+      range.deleteContents(); range.insertNode(node); range.setStartAfter(node); range.collapse(true);
+      selection.removeAllRanges(); selection.addRange(range);
     }
     showingExample=false; schedule();
   });
