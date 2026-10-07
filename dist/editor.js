@@ -362,6 +362,12 @@
 
   const escapeHtml = text => String(text).replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
   const safeColor = value => /^(?:#[0-9a-f]{3,8}|rgba?\([\d\s.,%]+\))$/i.test(String(value).trim()) ? String(value).trim() : '';
+  function formulaHtml(latex, displayMode=false) {
+    const expression=String(latex).trim();
+    const tag=displayMode?'div':'span', kind=displayMode?'math-block':'math-inline';
+    const rendered=window.katex?.renderToString(expression,{displayMode,throwOnError:false,trust:false,strict:'ignore'})||escapeHtml(expression);
+    return `<${tag} class="${kind}" data-latex="${escapeHtml(expression)}" contenteditable="false" title="双击修改公式">${rendered}</${tag}>`;
+  }
   function inline(text) {
     const colorTags=[]; let depth=0;
     const withColorTokens=String(text).replace(/<\/?span\b[^>]*>/gi, tag=>{
@@ -373,8 +379,10 @@
       depth++; colorTags.push(`<span style="${color?`color:${color};`:''}${background?`background-color:${background};`:''}">`);
       return `\u0003${colorTags.length-1}\u0004`;
     });
-    let value = escapeHtml(withColorTokens), codes = [];
-    value = value.replace(/`([^`]+)`/g, (_, code) => { codes.push(`<code>${code}</code>`); return `\u0001${codes.length - 1}\u0002`; });
+    let value = withColorTokens, codes = [];
+    value = value.replace(/`([^`]+)`/g, (_, code) => { codes.push(`<code>${escapeHtml(code)}</code>`); return `\u0001${codes.length - 1}\u0002`; });
+    value = value.replace(/(?<![\\$])\$([^$\n]+?)\$(?!\$)/g, (_, latex) => { codes.push(formulaHtml(latex)); return `\u0001${codes.length - 1}\u0002`; });
+    value = escapeHtml(value);
     value = value.replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g, (_, label, url) => `<a href="${url}" target="_blank" rel="noopener noreferrer">${label}</a>`);
     value = value.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>').replace(/__(.+?)__/g, '<strong>$1</strong>');
     value = value.replace(/(?<!\*)\*([^*\n]+)\*(?!\*)/g, '<em>$1</em>').replace(/(?<!_)_([^_\n]+)_(?!_)/g, '<em>$1</em>');
@@ -390,6 +398,14 @@
       const line = lines[i];
       if (!line.trim()) { i++; continue; }
       if (/^\s*<!--\s*column-break\s*-->\s*$/.test(line)) { result.push('<div data-column-break contenteditable="false"></div>'); i++; continue; }
+      if (/^\s*\$\$\s*$/.test(line)) {
+        const expression=[]; i++;
+        while (i < lines.length && !/^\s*\$\$\s*$/.test(lines[i])) expression.push(lines[i++]);
+        if (i < lines.length) i++;
+        result.push(formulaHtml(expression.join('\n'),true)); continue;
+      }
+      const displayFormula=line.match(/^\s*\$\$(.+)\$\$\s*$/);
+      if (displayFormula) { result.push(formulaHtml(displayFormula[1],true)); i++; continue; }
       if (/^\s*```/.test(line)) {
         const code = []; i++;
         while (i < lines.length && !/^\s*```/.test(lines[i])) code.push(lines[i++]);
@@ -419,7 +435,7 @@
         const tag = ordered ? 'ol' : 'ul'; result.push(`<${tag}>${items.join('')}</${tag}>`); continue;
       }
       const paragraph = [];
-      while (i < lines.length && lines[i].trim() && !/^\s*<!--\s*column-break\s*-->\s*$/.test(lines[i]) && !/^(#{1,6})\s+/.test(lines[i]) && !/^\s*(?:[-+*]|\d+\.)\s+/.test(lines[i]) && !/^\s*>/.test(lines[i]) && !/^\s*```/.test(lines[i]) && !/^\s*(---+|\*\*\*+)\s*$/.test(lines[i]) && !(i + 1 < lines.length && lines[i].includes('|') && tableRule(lines[i + 1]))) paragraph.push(lines[i++]);
+      while (i < lines.length && lines[i].trim() && !/^\s*<!--\s*column-break\s*-->\s*$/.test(lines[i]) && !/^\s*\$\$/.test(lines[i]) && !/^(#{1,6})\s+/.test(lines[i]) && !/^\s*(?:[-+*]|\d+\.)\s+/.test(lines[i]) && !/^\s*>/.test(lines[i]) && !/^\s*```/.test(lines[i]) && !/^\s*(---+|\*\*\*+)\s*$/.test(lines[i]) && !(i + 1 < lines.length && lines[i].includes('|') && tableRule(lines[i + 1]))) paragraph.push(lines[i++]);
       if (paragraph.length) result.push(`<p>${paragraph.map(inline).join('<br>')}</p>`); else i++;
     }
     return result.join('');
@@ -429,6 +445,7 @@
   function inlineToMarkdown(node) {
     if (node.nodeType === Node.TEXT_NODE) return node.textContent;
     if (node.nodeType !== Node.ELEMENT_NODE) return '';
+    if (node.hasAttribute('data-latex')) return `$${node.getAttribute('data-latex')}$`;
     const tag = node.tagName.toLowerCase();
     const inner = [...node.childNodes].map(inlineToMarkdown).join('');
     if (tag === 'br') return '\n';
@@ -450,6 +467,7 @@
       if (node.nodeType === Node.TEXT_NODE) { if (node.textContent.trim()) output.push(node.textContent.trim()); continue; }
       if (node.nodeType !== Node.ELEMENT_NODE) continue;
       const tag = node.tagName.toLowerCase();
+      if (node.classList.contains('math-block') && node.hasAttribute('data-latex')) { output.push(`$$\n${node.getAttribute('data-latex')}\n$$`); continue; }
       if (node.hasAttribute('data-column-break')) { output.push('<!-- column-break -->'); continue; }
       if (/^h[1-6]$/.test(tag)) output.push(`${'#'.repeat(Number(tag[1]))} ${inlineToMarkdown(node)}`);
       else if (tag === 'ul' || tag === 'ol') output.push([...node.children].filter(child => child.tagName === 'LI').map((child,index) => `${tag === 'ol' ? `${index+1}.` : '-'} ${inlineToMarkdown(child)}`).join('\n'));
@@ -654,10 +672,10 @@
     $('sourceBtn').textContent=state.sourceMode?'返回文字编辑':'源码编辑';
     $('sourceBtn').title=state.sourceMode?'返回格式化文字编辑':'编辑 Markdown 源码';
     $('sourceBtn').setAttribute('aria-pressed',String(state.sourceMode));
-    document.querySelectorAll('[data-command],[data-block],#linkBtn,#codeBtn,#tableBtn,#columnBreakBtn,[data-palette-trigger],.swatches button').forEach(button=>button.disabled=state.sourceMode);
+    document.querySelectorAll('[data-command],[data-block],#linkBtn,#codeBtn,#mathInlineBtn,#mathBlockBtn,#tableBtn,#columnBreakBtn,[data-palette-trigger],.swatches button').forEach(button=>button.disabled=state.sourceMode);
     (state.sourceMode?source:rich).focus(); schedule();
   });
-  document.querySelectorAll('.toolbar button[data-command],.toolbar button[data-block],#linkBtn,#codeBtn,#tableBtn,#columnBreakBtn,[data-palette-trigger],.swatches button').forEach(button=>button.addEventListener('mousedown',event=>{ if (button.dataset.paletteTrigger) rememberColorSelection(); event.preventDefault(); }));
+  document.querySelectorAll('.toolbar button[data-command],.toolbar button[data-block],#linkBtn,#codeBtn,#mathInlineBtn,#mathBlockBtn,#tableBtn,#columnBreakBtn,[data-palette-trigger],.swatches button').forEach(button=>button.addEventListener('mousedown',event=>{ if (button.dataset.paletteTrigger) rememberColorSelection(); event.preventDefault(); }));
   const paletteColors = {
     foreColor:[['黑色','#20272b'],['深灰','#667085'],['红色','#c62828'],['橙色','#e46b12'],['黄色','#b68400'],['绿色','#23814a'],['蓝色','#2563c9'],['紫色','#7b43b5'],['青色','#087f8c'],['粉色','#c83c81'],['棕色','#8a5a30'],['白色','#ffffff']],
     hiliteColor:[['无高亮','#ffffff'],['淡黄','#fff2ad'],['淡绿','#d9f3d9'],['淡蓝','#dcecff'],['淡粉','#ffe0ec'],['淡橙','#ffe6c9'],['淡紫','#ecdefa'],['亮黄','#ffe45c'],['薄荷','#b7eacb'],['青绿','#b9e7e9'],['浅灰','#e7eaed'],['珊瑚','#ffd2ca']]
@@ -678,13 +696,28 @@
   document.querySelectorAll('[data-block]').forEach(button=>button.addEventListener('click',()=>{ rich.focus(); document.execCommand('formatBlock',false,button.dataset.block); schedule(); }));
   $('linkBtn').addEventListener('click',()=>{ const url=prompt('链接地址（https://…）'); if (url && /^https?:\/\//i.test(url)) { rich.focus(); document.execCommand('createLink',false,url); schedule(); } });
   $('codeBtn').addEventListener('click',()=>{ const selected=window.getSelection()?.toString()||'代码'; rich.focus(); document.execCommand('insertHTML',false,`<code>${escapeHtml(selected)}</code>`); schedule(); });
+  function insertFormula(displayMode) {
+    const selected=selectionInEditor()?.toString().trim()||'\\frac{a}{b}';
+    const latex=prompt('输入 LaTeX 公式（例如：\\frac{a}{b}）：',selected);
+    if (!latex?.trim()) return;
+    rich.focus(); document.execCommand('insertHTML',false,formulaHtml(latex,displayMode)); schedule();
+  }
+  $('mathInlineBtn').addEventListener('click',()=>insertFormula(false));
+  $('mathBlockBtn').addEventListener('click',()=>insertFormula(true));
+  rich.addEventListener('dblclick',event=>{
+    const formula=event.target.closest('[data-latex]');
+    if (!formula || !rich.contains(formula)) return;
+    const latex=prompt('修改 LaTeX 公式：',formula.getAttribute('data-latex'));
+    if (latex===null || !latex.trim()) return;
+    formula.outerHTML=formulaHtml(latex,formula.classList.contains('math-block')); schedule();
+  });
   $('tableBtn').addEventListener('click',()=>{ rich.focus(); document.execCommand('insertHTML',false,'<table><thead><tr><th>概念</th><th>说明</th></tr></thead><tbody><tr><td>示例</td><td>内容</td></tr></tbody></table><p><br></p>'); schedule(); });
   $('columnBreakBtn').addEventListener('click',()=>{ rich.focus(); document.execCommand('insertHTML',false,'<div data-column-break contenteditable="false"></div><p><br></p>'); schedule(); });
   rich.addEventListener('paste',event=>{
     event.preventDefault();
     const text=event.clipboardData.getData('text/plain');
     if (!text) return;
-    const markdown=/(^|\n)\s*(#{1,6}\s|[-*+]\s|\d+\.\s|>\s|\|.*\||```)|\*\*|\[[^\]]+\]\(/m.test(text);
+    const markdown=/(^|\n)\s*(#{1,6}\s|[-*+]\s|\d+\.\s|>\s|\|.*\||```|\$\$)|\*\*|\[[^\]]+\]\(|(?<![\\$])\$[^$\n]+\$(?!\$)/m.test(text);
     const fullDocument=selectionCoversEditor() || showingExample;
     if (markdown || text.includes('\n')) {
       const html=markdownToHtml(text);

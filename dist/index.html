@@ -10,12 +10,13 @@
   <title>CloudyPage 云中笺 · Cheatsheet 排版器</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23426bd5'/%3E%3Cpath d='M18 43h28a10 10 0 0 0 0-20 15 15 0 0 0-29-2 11 11 0 0 0 1 22z' fill='white'/%3E%3C/svg%3E">
   <link rel="stylesheet" href="editor.css">
+  <link rel="stylesheet" href="vendor/katex.min.css">
 </head>
 <body>
   <div id="homeScreen" class="home-screen">
     <header class="home-header">
       <a class="home-brand" href="#home" aria-label="CloudyPage 云中笺首页"><span class="home-mark" aria-hidden="true">☁</span><span>CloudyPage <small>云中笺</small></span></a>
-      <nav class="home-nav" aria-label="首页导航"><a href="#demo">功能演示</a><a href="#features">产品特点</a><a href="#use-cases">适用场景</a><a href="#how-it-works">如何使用</a><a href="https://github.com/Penny-Z/CloudyPage" target="_blank" rel="noopener noreferrer">GitHub ↗</a></nav>
+      <nav class="home-nav" aria-label="首页导航"><a href="#demo">功能演示</a><a href="#features">产品特点</a><a href="#use-cases">适用场景</a><a href="#how-it-works">如何使用</a><a href="#feedback">反馈建议</a><a href="https://github.com/Penny-Z/CloudyPage" target="_blank" rel="noopener noreferrer">GitHub ↗</a></nav>
       <a class="home-header-cta" href="#editor">立即使用 <span aria-hidden="true">↗</span></a>
     </header>
     <main id="homeMain">
@@ -81,7 +82,7 @@
       <section id="use-cases" class="home-section use-cases-section" aria-labelledby="useCasesTitle"><div class="section-intro"><span class="section-kicker">MADE FOR QUICK REFERENCE</span><h2 id="useCasesTitle">一页速查，也适合这些场景。</h2><p>把常用信息压缩整理，放在需要快速查找的地方。</p></div><div class="feature-grid"><article class="feature-card"><span class="feature-icon">▤</span><span class="feature-number">01 / 考试</span><h3>制作 Cheatsheet</h3><p>整理公式、核心概念、解题步骤和易错点，考前复习或按规则准备考试资料。</p></article><article class="feature-card"><span class="feature-icon">⌂</span><span class="feature-number">02 / 课程</span><h3>课程复习提纲</h3><p>把章节脉络、知识联系和重点问题放到一页，快速回顾课程全貌。</p></article><article class="feature-card"><span class="feature-icon">⌕</span><span class="feature-number">03 / 开卷</span><h3>开卷资料索引</h3><p>按主题、题型或关键词整理资料位置，减少考试或查阅时翻找的时间。</p></article><article class="feature-card"><span class="feature-icon">✓</span><span class="feature-number">04 / 实验与实习</span><h3>流程和检查清单</h3><p>集中记录操作步骤、参数范围、注意事项和完成前的核对项目。</p></article><article class="feature-card"><span class="feature-icon">↗</span><span class="feature-number">05 / 会议与汇报</span><h3>提纲和讲述提示</h3><p>把关键数据、汇报顺序、过渡提示和待确认问题整理成随手可看的提纲。</p></article><article class="feature-card"><span class="feature-icon">⌘</span><span class="feature-number">06 / 项目与工具</span><h3>命令和术语速查</h3><p>归纳常用命令、字段含义、操作步骤和项目约定，方便团队随时查阅。</p></article></div></section>
       <section id="how-it-works" class="home-section start-section" aria-labelledby="startTitle"><div><span class="section-kicker">GET STARTED</span><h2 id="startTitle">打开，粘贴，<br>排成你的云中笺。</h2><p>无需注册，也无需上传笔记。现在就用一段内容试试。</p></div><a class="start-cta" href="#editor">开始排版 <span aria-hidden="true">→</span></a></section>
     </main>
-    <footer class="home-footer"><span>© 2026 Penny-Z · CloudyPage 云中笺</span><span>源码公开 · <a href="https://github.com/Penny-Z/CloudyPage/blob/main/LICENSE.md" target="_blank" rel="noopener noreferrer">非商业许可</a></span></footer>
+    <footer id="feedback" class="home-footer"><span>© 2026 Penny-Z · CloudyPage 云中笺</span><span>反馈与建议：<a href="mailto:cloudypage@163.com">cloudypage@163.com</a></span><span>源码公开 · <a href="https://github.com/Penny-Z/CloudyPage/blob/main/LICENSE.md" target="_blank" rel="noopener noreferrer">非商业许可</a></span></footer>
   </div>
   <div id="appScreen" class="app-screen" hidden>
   <header class="topbar">
@@ -96,7 +97,7 @@
           <div class="tool-group"><button data-command="bold" title="加粗 Ctrl+B"><b>B</b></button><button data-command="italic" title="斜体 Ctrl+I"><i>I</i></button></div>
           <div class="tool-group"><button data-block="h1" title="一级标题">H₁</button><button data-block="h2" title="二级标题">H₂</button><button data-block="h3" title="三级标题">H₃</button></div>
           <div class="tool-group"><button data-command="insertUnorderedList" title="项目符号">☷</button><button data-command="insertOrderedList" title="编号列表">1.</button></div>
-          <div class="tool-group"><div class="palette-wrap"><button id="textColorBtn" class="palette-trigger" data-palette-trigger="foreColor" title="文字颜色" aria-expanded="false">A̲ <span class="color-caret">▾</span></button><div id="textColorPalette" class="color-palette" hidden><span class="palette-title">文字颜色</span><div class="swatches" data-palette="foreColor"></div><label class="custom-color">自定义 <input id="textColorCustom" type="color" value="#256449" aria-label="自定义文字颜色"></label></div></div><div class="palette-wrap"><button id="highlightBtn" class="palette-trigger" data-palette-trigger="hiliteColor" title="高亮颜色" aria-expanded="false">◩ <span class="color-caret">▾</span></button><div id="highlightPalette" class="color-palette" hidden><span class="palette-title">高亮颜色</span><div class="swatches" data-palette="hiliteColor"></div><label class="custom-color">自定义 <input id="highlightCustom" type="color" value="#fff2ad" aria-label="自定义高亮颜色"></label></div></div><button id="linkBtn" title="插入链接">↗</button><button id="codeBtn" title="行内代码">⌘</button><button id="tableBtn" title="插入表格">▦</button></div>
+          <div class="tool-group"><div class="palette-wrap"><button id="textColorBtn" class="palette-trigger" data-palette-trigger="foreColor" title="文字颜色" aria-expanded="false">A̲ <span class="color-caret">▾</span></button><div id="textColorPalette" class="color-palette" hidden><span class="palette-title">文字颜色</span><div class="swatches" data-palette="foreColor"></div><label class="custom-color">自定义 <input id="textColorCustom" type="color" value="#256449" aria-label="自定义文字颜色"></label></div></div><div class="palette-wrap"><button id="highlightBtn" class="palette-trigger" data-palette-trigger="hiliteColor" title="高亮颜色" aria-expanded="false">◩ <span class="color-caret">▾</span></button><div id="highlightPalette" class="color-palette" hidden><span class="palette-title">高亮颜色</span><div class="swatches" data-palette="hiliteColor"></div><label class="custom-color">自定义 <input id="highlightCustom" type="color" value="#fff2ad" aria-label="自定义高亮颜色"></label></div></div><button id="linkBtn" title="插入链接">↗</button><button id="codeBtn" title="行内代码：排版变量名、命令或代码片段，不会渲染公式">&lt;/&gt;</button><button id="mathInlineBtn" title="插入行内公式（LaTeX）" aria-label="插入行内公式">∑</button><button id="mathBlockBtn" title="插入独立公式（LaTeX）" aria-label="插入独立公式">∑↓</button><button id="tableBtn" title="插入表格">▦</button></div>
           <div class="tool-group"><button id="columnBreakBtn" title="从下一栏开始">↦|</button></div>
           <div class="tool-group"><button data-command="undo" title="撤销">↶</button><button data-command="redo" title="重做">↷</button></div>
           <button id="sourceBtn" class="source-button" aria-pressed="false" title="编辑 Markdown 源码">源码编辑</button>
@@ -131,6 +132,7 @@
     <p>当前编辑内容已自动保存在此浏览器。另存为命名草稿后，还能在草稿箱中单独找到这一版。</p>
     <div class="leave-actions"><button id="cancelLeaveBtn" type="button">继续编辑</button><button id="leaveWithoutDraftBtn" type="button">直接离开</button><button id="saveAndLeaveBtn" type="button">保存草稿并离开</button></div>
   </dialog>
+  <script src="vendor/katex.min.js"></script>
   <script src="editor.js"></script>
 </body>
 </html>
