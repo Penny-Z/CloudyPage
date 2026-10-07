@@ -15,7 +15,7 @@
   <div id="homeScreen" class="home-screen">
     <header class="home-header">
       <a class="home-brand" href="#home" aria-label="CloudyPage 云中笺首页"><span class="home-mark" aria-hidden="true">☁</span><span>CloudyPage <small>云中笺</small></span></a>
-      <nav class="home-nav" aria-label="首页导航"><a href="#features">产品特点</a><a href="#how-it-works">如何使用</a><a href="https://github.com/Penny-Z/CloudyPage" target="_blank" rel="noopener noreferrer">GitHub ↗</a></nav>
+      <nav class="home-nav" aria-label="首页导航"><a href="#demo">功能演示</a><a href="#features">产品特点</a><a href="#how-it-works">如何使用</a><a href="https://github.com/Penny-Z/CloudyPage" target="_blank" rel="noopener noreferrer">GitHub ↗</a></nav>
       <a class="home-header-cta" href="#editor">立即使用 <span aria-hidden="true">↗</span></a>
     </header>
     <main id="homeMain">
@@ -24,7 +24,7 @@
           <div class="hero-eyebrow"><span class="eyebrow-dot"></span> 为知识留下一页轻盈的空间</div>
           <h1 id="heroTitle">把零散的笔记，<br><em>整理成一页。</em></h1>
           <p>粘贴 Markdown，像写笔记一样编辑。云中笺会把内容顺序排入多栏，让知识清晰、紧凑，也方便打印和随身查阅。</p>
-          <div class="hero-actions"><a class="hero-primary" href="#editor">立即使用 <span aria-hidden="true">→</span></a><a class="hero-secondary" href="#how-it-works">了解如何使用 <span aria-hidden="true">↓</span></a></div>
+          <div class="hero-actions"><a class="hero-primary" href="#editor">立即使用 <span aria-hidden="true">→</span></a><a class="hero-secondary" href="#demo">试试功能演示 <span aria-hidden="true">↓</span></a></div>
           <div class="hero-notes"><span>无需注册</span><span>本地保存</span><span>可导出 PDF</span></div>
         </div>
         <div class="hero-visual" aria-label="CloudyPage 多栏速查表排版示意">
@@ -37,6 +37,31 @@
             </div>
           </div>
           <div class="visual-float">☁ <span>内容填满一栏，再流向下一栏</span></div>
+        </div>
+      </section>
+      <section id="demo" class="home-section guided-demo" aria-labelledby="demoTitle">
+        <div class="demo-intro"><span class="section-kicker">INTERACTIVE TOUR</span><h2 id="demoTitle">先点点看，再开始写。</h2><p>这是一个可操作的缩小版排版器。点选按钮，看看文字与纸张预览如何变化。</p></div>
+        <div id="guidedDemo" class="guided-demo-grid">
+          <div class="demo-window" aria-label="CloudyPage 功能演示窗口">
+            <div class="demo-window-bar"><div class="demo-window-brand"><span class="demo-cloud">☁</span><strong>CloudyPage <span>云中笺</span></strong><span class="demo-tag">功能演示</span></div><div class="demo-window-actions"><button type="button" data-demo-action="download">下载 .md</button><button type="button" data-demo-action="print">打印 / PDF</button></div></div>
+            <div class="demo-workspace">
+              <div class="demo-edit-pane">
+                <div class="demo-tabs" role="tablist" aria-label="演示工具栏"><button type="button" data-demo-tab="text" role="tab" aria-selected="true">▤ 文字</button><button type="button" data-demo-tab="layout" role="tab" aria-selected="false">▦ 布局</button></div>
+                <div class="demo-toolbar" id="demoTextTools"><button type="button" data-demo-action="markdown" aria-pressed="false">&lt;/&gt; Markdown</button><button type="button" data-demo-action="bold" aria-pressed="false"><b>B</b> 加粗</button><button type="button" data-demo-action="heading" aria-pressed="false">H₂ 标题</button><button type="button" data-demo-action="highlight" aria-pressed="false">◩ 高亮</button><button type="button" data-demo-action="list" aria-pressed="false">☷ 列表</button></div>
+                <div class="demo-toolbar demo-layout-tools" id="demoLayoutTools" hidden><span>纸张</span><button type="button" data-demo-action="landscape" aria-pressed="true">横向</button><button type="button" data-demo-action="portrait" aria-pressed="false">纵向</button><span>栏数</span><button type="button" data-demo-action="columns3" aria-pressed="false">3</button><button type="button" data-demo-action="columns4" aria-pressed="true">4</button><label>字号 <input id="demoFont" type="range" min="6" max="12" step="1" value="8"><output id="demoFontValue">8</output></label></div>
+                <div class="demo-document"><div id="demoRichContent"><h3 id="demoEditorHeading">期末复习速查</h3><p>把重点放在一页里，复习时能更快找到。</p><p id="demoEditorAccent">核心概念：先理解，再记住公式。</p><ul id="demoEditorList"><li>概念与定义</li><li>关键步骤</li><li>易错提醒</li></ul></div><pre id="demoSourceContent" hidden># 期末复习速查
+
+把重点放在一页里，复习时能更快找到。
+
+- 概念与定义
+- 关键步骤
+- 易错提醒</pre></div>
+                <div class="demo-editor-foot">演示内容不会写入你的笔记</div>
+              </div>
+                <div class="demo-preview-pane"><div class="demo-preview-head"><span id="demoPreviewLabel">A4 横向 · 4 栏 · 8 pt</span><span>实时预览</span></div><div class="demo-paper-stage"><div id="demoPaper" class="demo-paper"><div id="demoPaperColumns" class="demo-paper-columns"><div class="demo-paper-column"><strong class="demo-paper-title">期末复习速查</strong><p>把重点放在一页里，复习时能更快找到。</p><p class="demo-paper-accent">核心概念：先理解，再记住公式。</p><p class="demo-paper-list">概念与定义</p><p class="demo-paper-list">关键步骤</p><p class="demo-paper-list">易错提醒</p></div><div class="demo-paper-column"><strong>整理信息</strong><p>标题区分层级，列表梳理重点。</p><p>公式、例题和备注可以紧凑排列。</p></div><div class="demo-paper-column"><strong>顺序填栏</strong><p>内容从左到右依次进入下一栏。</p><p>调整字号即可改变每栏容量。</p></div><div class="demo-paper-column"><strong>随时带走</strong><p>编辑完成后保存 Markdown。</p><p>打印或导出清晰的 PDF。</p></div></div></div></div></div>
+            </div>
+          </div>
+          <aside class="demo-guide"><span class="demo-guide-step" id="demoGuideStep">01 / 先试试</span><h3 id="demoGuideTitle">每个按钮都有回应。</h3><p id="demoGuideText" aria-live="polite">点左侧的 Markdown、加粗或高亮；切到“布局”还可以改变纸张方向、栏数和字号。</p><div class="demo-guide-hint">↗ 点击演示窗口中的按钮</div><a href="#editor" class="demo-guide-cta">打开完整排版器 <span aria-hidden="true">→</span></a></aside>
         </div>
       </section>
       <section id="features" class="home-section features-section" aria-labelledby="featuresTitle"><div class="section-intro"><span class="section-kicker">WHY CLOUDYPAGE</span><h2 id="featuresTitle">少一点调整，<br>多一点专注。</h2><p>从一段长笔记，到一张真正能用的速查表。</p></div><div class="feature-grid"><article class="feature-card"><span class="feature-icon">✎</span><span class="feature-number">01 / 编辑</span><h3>写起来顺手</h3><p>粘贴 Markdown 后继续直接编辑。标题、列表、文字颜色和高亮，都可以随手调整。</p></article><article class="feature-card"><span class="feature-icon">▤</span><span class="feature-number">02 / 排版</span><h3>多栏自然流动</h3><p>内容依次填满每一栏。横向、纵向、字号和栏数都可调整，边写边看预览。</p></article><article class="feature-card"><span class="feature-icon">↗</span><span class="feature-number">03 / 带走</span><h3>一页随时可查</h3><p>打印或保存 PDF，也能下载 Markdown。编辑内容自动保存在当前浏览器。</p></article></div></section>

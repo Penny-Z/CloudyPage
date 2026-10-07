@@ -63,6 +63,23 @@ button { cursor:pointer; }
 .visual-columns { height:calc(100% - 20px); display:grid; grid-template-columns:repeat(4,1fr); gap:6px; }.visual-columns>div { padding-right:5px; border-right:1px solid #e4ebf3; }.visual-columns>div:last-child { border:0; }.visual-columns b,.visual-columns strong { display:block; margin:2px 0 6px; color:#2a496f; font-size:7px; line-height:1.2; }.visual-columns strong { margin-top:10px; color:#56739d; font-size:6px; }.visual-columns i { display:block; width:95%; height:3px; margin:6px 0; border-radius:3px; background:#cbd8e7; }.visual-columns i:nth-of-type(2n) { width:77%; }.visual-columns i.short { width:49%; }
 .visual-float { position:absolute; right:-12px; bottom:14px; display:flex; align-items:center; gap:8px; padding:12px 15px; border:1px solid #d8e9f6; border-radius:11px; background:#fff; color:#4270ae; box-shadow:0 12px 26px #42648c20; font-size:11px; font-weight:700; }.visual-float:first-letter { font-size:17px; }
 .home-section { max-width:1480px; margin:auto; padding:92px clamp(24px,4.5vw,72px); }
+.guided-demo { border-top:1px solid #e8eef6; }
+.demo-intro { margin-bottom:34px; }.demo-intro h2 { margin:14px 0; color:#172b44; font-size:clamp(34px,3.3vw,48px); line-height:1.2; letter-spacing:-.05em; }.demo-intro p { margin:0; color:#697b91; font-size:15px; line-height:1.8; }
+.guided-demo-grid { display:grid; grid-template-columns:minmax(0,1fr) minmax(225px,280px); gap:20px; align-items:stretch; }
+.demo-window { min-width:0; overflow:hidden; border:1px solid #dbe4ef; border-radius:18px; background:#fff; box-shadow:0 17px 45px #315b8c14; }
+.demo-window button { cursor:pointer; }
+.demo-window-bar { height:53px; display:flex; align-items:center; justify-content:space-between; gap:12px; padding:0 17px; border-bottom:1px solid #e8edf4; }
+.demo-window-brand,.demo-window-actions { display:flex; align-items:center; gap:10px; }.demo-window-brand { white-space:nowrap; color:#2b3f59; font-size:12px; }.demo-window-brand strong span { font-weight:500; }.demo-cloud { color:#4778d3; font-size:24px; }.demo-tag { padding:4px 7px; border-radius:4px; background:#edf4ff; color:#5b7bb0; font-size:10px; }
+.demo-window-actions button { padding:6px 9px; border:0; border-radius:6px; background:transparent; color:#576d8a; font-size:11px; }.demo-window-actions button:last-child { background:#426bd5; color:#fff; }.demo-window-actions button:hover { background:#e9f1ff; color:#315dbb; }.demo-window-actions button:last-child:hover { background:#3159bf; color:#fff; }
+.demo-workspace { display:grid; grid-template-columns:minmax(210px,37%) minmax(0,63%); min-height:382px; }.demo-edit-pane { min-width:0; display:flex; flex-direction:column; border-right:1px solid #e5ebf3; }
+.demo-tabs { display:flex; gap:5px; padding:10px 13px; border-bottom:1px solid #e9eef4; background:#f8faff; }.demo-tabs button { padding:7px 12px; border:0; border-radius:7px; background:transparent; color:#74849b; font-size:11px; font-weight:700; }.demo-tabs button[aria-selected="true"] { background:#fff; color:#3564bf; box-shadow:0 1px 6px #869bc126; }
+.demo-toolbar { min-height:64px; display:flex; align-items:center; align-content:center; flex-wrap:wrap; gap:5px; padding:8px 12px; border-bottom:1px solid #ecf0f5; }.demo-toolbar button { padding:6px 8px; border:1px solid #dbe5f1; border-radius:6px; background:#fff; color:#4f6580; font-size:10px; white-space:nowrap; }.demo-toolbar button:hover,.demo-toolbar button[aria-pressed="true"] { border-color:#9db7e9; background:#eaf2ff; color:#315eb8; }.demo-toolbar>span { color:#8594a7; font-size:10px; }.demo-layout-tools label { display:flex; align-items:center; gap:5px; color:#6a7b91; font-size:10px; white-space:nowrap; }.demo-layout-tools input { width:65px; accent-color:#426bd5; }.demo-layout-tools output { min-width:9px; color:#345fba; font-weight:700; }
+.demo-document { flex:1; min-height:215px; padding:18px 19px; color:#35465d; font-size:11px; line-height:1.65; }.demo-document h3 { margin:0 0 11px; font-size:14px; }.demo-document p { margin:0 0 8px; }.demo-document ul { margin:10px 0; padding-left:17px; list-style:none; }.demo-window.demo-list .demo-document ul { list-style:disc; }.demo-document pre { margin:0; overflow:auto; white-space:pre-wrap; color:#44617c; font:10px/1.7 Consolas,"Microsoft YaHei",monospace; }.demo-window.demo-bold #demoEditorAccent,.demo-window.demo-bold .demo-paper-accent { font-weight:800; }.demo-window.demo-highlight #demoEditorAccent,.demo-window.demo-highlight .demo-paper-accent { background:#fff0a7; box-shadow:0 0 0 2px #fff0a7; }.demo-window.demo-heading #demoEditorHeading { color:#315eb8; font-size:18px; }.demo-window.demo-heading .demo-paper-title { color:#315eb8; font-size:1.45em; }.demo-editor-foot { padding:9px 14px; border-top:1px solid #ecf0f5; color:#9aa8b7; font-size:9px; }
+.demo-preview-pane { min-width:0; display:flex; flex-direction:column; background:#eef3f8; }.demo-preview-head { height:39px; display:flex; justify-content:space-between; align-items:center; gap:8px; padding:0 15px; color:#657b96; font-size:10px; font-weight:700; }.demo-preview-head span:last-child { color:#8d9db0; font-weight:500; }.demo-paper-stage { flex:1; min-height:0; display:grid; place-items:center; padding:12px 18px 20px; overflow:hidden; }
+.demo-paper { width:min(100%,525px); aspect-ratio:1.414; padding:16px; background:#fff; box-shadow:0 6px 24px #647a9b29; transition:width .3s,aspect-ratio .3s; }.demo-paper[data-orientation="portrait"] { width:min(55%,270px); aspect-ratio:.707; }.demo-paper-columns { height:100%; display:grid; grid-template-columns:repeat(var(--demo-columns,4),minmax(0,1fr)); gap:7px; overflow:hidden; font-size:var(--demo-font,8px); line-height:1.42; }.demo-paper-column { min-width:0; padding-right:6px; border-right:1px solid #e5eaf0; overflow:hidden; overflow-wrap:anywhere; }.demo-paper-column:last-child { border-right:0; }.demo-paper[data-columns="3"] .demo-paper-column:last-child { display:none; }.demo-paper-column strong { display:block; margin:0 0 8px; color:#263b58; font-size:1.08em; }.demo-paper-column p { margin:0 0 6px; }.demo-paper-column .demo-paper-list { padding-left:0; }.demo-window.demo-list .demo-paper-list:before { content:'• '; }.demo-paper[data-orientation="portrait"] .demo-paper-columns { gap:3px; }.demo-paper[data-orientation="portrait"] .demo-paper-column { padding-right:2px; }
+.demo-guide { display:flex; flex-direction:column; padding:25px; border:1px solid #dfe8f4; border-radius:18px; background:linear-gradient(150deg,#f5f9ff,#eaf3ff); }.demo-guide-step { color:#527ac4; font-size:11px; font-weight:800; letter-spacing:.08em; }.demo-guide h3 { margin:28px 0 12px; color:#213955; font-size:25px; line-height:1.3; letter-spacing:-.04em; }.demo-guide p { margin:0; color:#637890; font-size:13px; line-height:1.8; }.demo-guide-hint { margin-top:auto; padding-top:30px; color:#7d9ac0; font-size:11px; }.demo-guide-cta { display:flex; justify-content:space-between; gap:10px; margin-top:19px; padding:12px 13px; border-radius:8px; background:#426bd5; color:#fff!important; font-size:12px; font-weight:700; }.demo-guide-cta:hover { background:#3159bf; }
+@media(max-width:1120px) { .guided-demo-grid { grid-template-columns:1fr; }.demo-guide { min-height:185px; }.demo-guide h3 { margin-top:12px; }.demo-guide-hint { padding-top:16px; }.demo-guide-cta { max-width:225px; } }
+@media(max-width:650px) { .guided-demo { padding-top:55px; }.demo-workspace { grid-template-columns:1fr; }.demo-edit-pane { border-right:0; border-bottom:1px solid #e5ebf3; }.demo-document { min-height:155px; }.demo-preview-pane { min-height:260px; }.demo-paper-stage { padding:9px 12px 18px; }.demo-paper { max-width:450px; }.demo-window-brand { font-size:11px; }.demo-tag { display:none; }.demo-window-actions { gap:0; }.demo-window-actions button { padding:5px; font-size:10px; } }
 .features-section { border-top:1px solid #e8eef6; }.section-intro { margin-bottom:35px; }.section-intro h2,.start-section h2 { margin:14px 0; color:#172b44; font-size:clamp(34px,3.3vw,48px); line-height:1.25; letter-spacing:-.05em; }.section-intro p,.start-section p { margin:0; color:#697b91; font-size:15px; line-height:1.8; }
 .feature-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:17px; }.feature-card { min-height:229px; padding:25px 26px; border:1px solid #e1e9f3; border-radius:15px; background:#fff; box-shadow:0 8px 28px #5076a00b; }.feature-icon { display:grid; place-items:center; width:38px; height:38px; border-radius:11px; background:#edf4ff; color:#426bcb; font-size:21px; }.feature-number { display:block; margin-top:22px; color:#7c9ac7; font-size:10px; font-weight:800; letter-spacing:.08em; }.feature-card h3 { margin:8px 0; color:#20364e; font-size:19px; }.feature-card p { margin:0; color:#6d7b8c; font-size:13px; line-height:1.75; }
 .start-section { display:flex; align-items:end; justify-content:space-between; gap:30px; margin-bottom:55px; border-radius:22px; background:#edf5ff; }.start-cta { display:inline-flex; align-items:center; justify-content:space-between; gap:35px; min-width:156px; padding:15px 18px; border-radius:10px; background:#426bd5; color:#fff!important; font-size:14px; font-weight:700; }.start-cta:hover { background:#3057b4; }
@@ -140,7 +157,7 @@ button { cursor:pointer; }
   <div id="homeScreen" class="home-screen">
     <header class="home-header">
       <a class="home-brand" href="#home" aria-label="CloudyPage 云中笺首页"><span class="home-mark" aria-hidden="true">☁</span><span>CloudyPage <small>云中笺</small></span></a>
-      <nav class="home-nav" aria-label="首页导航"><a href="#features">产品特点</a><a href="#how-it-works">如何使用</a><a href="https://github.com/Penny-Z/CloudyPage" target="_blank" rel="noopener noreferrer">GitHub ↗</a></nav>
+      <nav class="home-nav" aria-label="首页导航"><a href="#demo">功能演示</a><a href="#features">产品特点</a><a href="#how-it-works">如何使用</a><a href="https://github.com/Penny-Z/CloudyPage" target="_blank" rel="noopener noreferrer">GitHub ↗</a></nav>
       <a class="home-header-cta" href="#editor">立即使用 <span aria-hidden="true">↗</span></a>
     </header>
     <main id="homeMain">
@@ -149,7 +166,7 @@ button { cursor:pointer; }
           <div class="hero-eyebrow"><span class="eyebrow-dot"></span> 为知识留下一页轻盈的空间</div>
           <h1 id="heroTitle">把零散的笔记，<br><em>整理成一页。</em></h1>
           <p>粘贴 Markdown，像写笔记一样编辑。云中笺会把内容顺序排入多栏，让知识清晰、紧凑，也方便打印和随身查阅。</p>
-          <div class="hero-actions"><a class="hero-primary" href="#editor">立即使用 <span aria-hidden="true">→</span></a><a class="hero-secondary" href="#how-it-works">了解如何使用 <span aria-hidden="true">↓</span></a></div>
+          <div class="hero-actions"><a class="hero-primary" href="#editor">立即使用 <span aria-hidden="true">→</span></a><a class="hero-secondary" href="#demo">试试功能演示 <span aria-hidden="true">↓</span></a></div>
           <div class="hero-notes"><span>无需注册</span><span>本地保存</span><span>可导出 PDF</span></div>
         </div>
         <div class="hero-visual" aria-label="CloudyPage 多栏速查表排版示意">
@@ -162,6 +179,31 @@ button { cursor:pointer; }
             </div>
           </div>
           <div class="visual-float">☁ <span>内容填满一栏，再流向下一栏</span></div>
+        </div>
+      </section>
+      <section id="demo" class="home-section guided-demo" aria-labelledby="demoTitle">
+        <div class="demo-intro"><span class="section-kicker">INTERACTIVE TOUR</span><h2 id="demoTitle">先点点看，再开始写。</h2><p>这是一个可操作的缩小版排版器。点选按钮，看看文字与纸张预览如何变化。</p></div>
+        <div id="guidedDemo" class="guided-demo-grid">
+          <div class="demo-window" aria-label="CloudyPage 功能演示窗口">
+            <div class="demo-window-bar"><div class="demo-window-brand"><span class="demo-cloud">☁</span><strong>CloudyPage <span>云中笺</span></strong><span class="demo-tag">功能演示</span></div><div class="demo-window-actions"><button type="button" data-demo-action="download">下载 .md</button><button type="button" data-demo-action="print">打印 / PDF</button></div></div>
+            <div class="demo-workspace">
+              <div class="demo-edit-pane">
+                <div class="demo-tabs" role="tablist" aria-label="演示工具栏"><button type="button" data-demo-tab="text" role="tab" aria-selected="true">▤ 文字</button><button type="button" data-demo-tab="layout" role="tab" aria-selected="false">▦ 布局</button></div>
+                <div class="demo-toolbar" id="demoTextTools"><button type="button" data-demo-action="markdown" aria-pressed="false">&lt;/&gt; Markdown</button><button type="button" data-demo-action="bold" aria-pressed="false"><b>B</b> 加粗</button><button type="button" data-demo-action="heading" aria-pressed="false">H₂ 标题</button><button type="button" data-demo-action="highlight" aria-pressed="false">◩ 高亮</button><button type="button" data-demo-action="list" aria-pressed="false">☷ 列表</button></div>
+                <div class="demo-toolbar demo-layout-tools" id="demoLayoutTools" hidden><span>纸张</span><button type="button" data-demo-action="landscape" aria-pressed="true">横向</button><button type="button" data-demo-action="portrait" aria-pressed="false">纵向</button><span>栏数</span><button type="button" data-demo-action="columns3" aria-pressed="false">3</button><button type="button" data-demo-action="columns4" aria-pressed="true">4</button><label>字号 <input id="demoFont" type="range" min="6" max="12" step="1" value="8"><output id="demoFontValue">8</output></label></div>
+                <div class="demo-document"><div id="demoRichContent"><h3 id="demoEditorHeading">期末复习速查</h3><p>把重点放在一页里，复习时能更快找到。</p><p id="demoEditorAccent">核心概念：先理解，再记住公式。</p><ul id="demoEditorList"><li>概念与定义</li><li>关键步骤</li><li>易错提醒</li></ul></div><pre id="demoSourceContent" hidden># 期末复习速查
+
+把重点放在一页里，复习时能更快找到。
+
+- 概念与定义
+- 关键步骤
+- 易错提醒</pre></div>
+                <div class="demo-editor-foot">演示内容不会写入你的笔记</div>
+              </div>
+                <div class="demo-preview-pane"><div class="demo-preview-head"><span id="demoPreviewLabel">A4 横向 · 4 栏 · 8 pt</span><span>实时预览</span></div><div class="demo-paper-stage"><div id="demoPaper" class="demo-paper"><div id="demoPaperColumns" class="demo-paper-columns"><div class="demo-paper-column"><strong class="demo-paper-title">期末复习速查</strong><p>把重点放在一页里，复习时能更快找到。</p><p class="demo-paper-accent">核心概念：先理解，再记住公式。</p><p class="demo-paper-list">概念与定义</p><p class="demo-paper-list">关键步骤</p><p class="demo-paper-list">易错提醒</p></div><div class="demo-paper-column"><strong>整理信息</strong><p>标题区分层级，列表梳理重点。</p><p>公式、例题和备注可以紧凑排列。</p></div><div class="demo-paper-column"><strong>顺序填栏</strong><p>内容从左到右依次进入下一栏。</p><p>调整字号即可改变每栏容量。</p></div><div class="demo-paper-column"><strong>随时带走</strong><p>编辑完成后保存 Markdown。</p><p>打印或导出清晰的 PDF。</p></div></div></div></div></div>
+            </div>
+          </div>
+          <aside class="demo-guide"><span class="demo-guide-step" id="demoGuideStep">01 / 先试试</span><h3 id="demoGuideTitle">每个按钮都有回应。</h3><p id="demoGuideText" aria-live="polite">点左侧的 Markdown、加粗或高亮；切到“布局”还可以改变纸张方向、栏数和字号。</p><div class="demo-guide-hint">↗ 点击演示窗口中的按钮</div><a href="#editor" class="demo-guide-cta">打开完整排版器 <span aria-hidden="true">→</span></a></aside>
         </div>
       </section>
       <section id="features" class="home-section features-section" aria-labelledby="featuresTitle"><div class="section-intro"><span class="section-kicker">WHY CLOUDYPAGE</span><h2 id="featuresTitle">少一点调整，<br>多一点专注。</h2><p>从一段长笔记，到一张真正能用的速查表。</p></div><div class="feature-grid"><article class="feature-card"><span class="feature-icon">✎</span><span class="feature-number">01 / 编辑</span><h3>写起来顺手</h3><p>粘贴 Markdown 后继续直接编辑。标题、列表、文字颜色和高亮，都可以随手调整。</p></article><article class="feature-card"><span class="feature-icon">▤</span><span class="feature-number">02 / 排版</span><h3>多栏自然流动</h3><p>内容依次填满每一栏。横向、纵向、字号和栏数都可调整，边写边看预览。</p></article><article class="feature-card"><span class="feature-icon">↗</span><span class="feature-number">03 / 带走</span><h3>一页随时可查</h3><p>打印或保存 PDF，也能下载 Markdown。编辑内容自动保存在当前浏览器。</p></article></div></section>
@@ -225,6 +267,76 @@ button { cursor:pointer; }
     if (nextScreen === 'editor') requestAnimationFrame(render);
   }
   window.addEventListener('hashchange', syncScreen);
+  function setupGuidedDemo() {
+    const demo = $('guidedDemo');
+    if (!demo) return;
+    const windowEl = demo.querySelector('.demo-window');
+    const paper = $('demoPaper');
+    const richContent = $('demoRichContent');
+    const sourceContent = $('demoSourceContent');
+    const fontInput = $('demoFont');
+    const demoState = { orientation:'landscape', columns:4, font:8, markdown:false, bold:false, heading:false, highlight:false, list:false };
+    const help = {
+      text:['01 / 文字','直接编辑文字','选中内容后，可以用工具栏设置标题、加粗、列表和颜色。这里先点按钮体验效果。'],
+      layout:['02 / 布局','让纸张适应内容','横向适合较多栏目；纵向更适合阅读。栏数和字号可以随时调整。'],
+      markdown:['01 / Markdown','在文字与源码之间切换','源码模式展示原始 Markdown；切回文字模式可以直接编辑排好的内容。'],
+      bold:['01 / 加粗','把关键词提出来','加粗会同时出现在编辑内容和右侧纸张预览中，适合强调定义与结论。'],
+      heading:['01 / 标题','建立清晰的层级','标题能把大段内容分成容易查找的小节。'],
+      highlight:['01 / 高亮','给重点加一点颜色','高亮适合标出容易忘记的公式、概念或提醒。'],
+      list:['01 / 列表','把步骤拆开','项目符号让零散信息变成可以逐项浏览的清单。'],
+      landscape:['02 / 横向','横向放下更多栏目','A4 横向页面较宽，适合三到四栏的紧凑速查表。'],
+      portrait:['02 / 纵向','换成竖版阅读','纵向页面更接近日常文档，可以按需要继续调整栏数。'],
+      columns3:['02 / 三栏','栏目更宽','三栏给每一栏更多横向空间，适合较长的句子和表格。'],
+      columns4:['02 / 四栏','一页容纳更多重点','四栏适合精简后的术语、步骤和公式。内容会依次流入下一栏。'],
+      font:['02 / 字号','用字号控制密度','拖动滑块，纸张预览会同步改变字的大小。'],
+      download:['03 / 下载','保留可继续编辑的笔记','完整排版器中的“下载 .md”会保存 Markdown 文件，方便备份和继续修改。'],
+      print:['03 / 导出','把这一页带走','完整排版器中的“打印 / PDF”会打开浏览器打印窗口，可选择纸张打印或保存 PDF。']
+    };
+    function showHelp(action) {
+      const [step,title,description] = help[action];
+      $('demoGuideStep').textContent = step;
+      $('demoGuideTitle').textContent = title;
+      $('demoGuideText').textContent = description;
+    }
+    function renderDemo() {
+      for (const name of ['bold','heading','highlight','list']) windowEl.classList.toggle(`demo-${name}`, demoState[name]);
+      richContent.hidden = demoState.markdown;
+      sourceContent.hidden = !demoState.markdown;
+      paper.dataset.orientation = demoState.orientation;
+      paper.dataset.columns = String(demoState.columns);
+      paper.style.setProperty('--demo-columns', demoState.columns);
+      paper.style.setProperty('--demo-font', `${demoState.font}px`);
+      $('demoFontValue').textContent = demoState.font;
+      $('demoPreviewLabel').textContent = `A4 ${demoState.orientation === 'portrait' ? '纵向' : '横向'} · ${demoState.columns} 栏 · ${demoState.font} pt`;
+      demo.querySelectorAll('[data-demo-action]').forEach(button => {
+        const action = button.dataset.demoAction;
+        if (['bold','heading','highlight','list','markdown'].includes(action)) button.setAttribute('aria-pressed', String(demoState[action]));
+        if (['portrait','landscape'].includes(action)) button.setAttribute('aria-pressed', String(demoState.orientation === action));
+        if (['columns3','columns4'].includes(action)) button.setAttribute('aria-pressed', String(demoState.columns === Number(action.at(-1))));
+      });
+    }
+    demo.addEventListener('click', event => {
+      const tab = event.target.closest('[data-demo-tab]');
+      if (tab) {
+        const layout = tab.dataset.demoTab === 'layout';
+        $('demoTextTools').hidden = layout;
+        $('demoLayoutTools').hidden = !layout;
+        demo.querySelectorAll('[data-demo-tab]').forEach(button => button.setAttribute('aria-selected', String(button === tab)));
+        showHelp(layout ? 'layout' : 'text');
+        return;
+      }
+      const button = event.target.closest('[data-demo-action]');
+      if (!button) return;
+      const action = button.dataset.demoAction;
+      if (['bold','heading','highlight','list','markdown'].includes(action)) demoState[action] = !demoState[action];
+      else if (['portrait','landscape'].includes(action)) demoState.orientation = action;
+      else if (['columns3','columns4'].includes(action)) demoState.columns = Number(action.at(-1));
+      showHelp(action);
+      renderDemo();
+    });
+    fontInput.addEventListener('input', () => { demoState.font = Number(fontInput.value); showHelp('font'); renderDemo(); });
+    renderDemo();
+  }
   const key = 'zhijian-cheatsheet-v2';
   const oldKey = 'zhijian-cheatsheet-v1';
   const state = { orientation:'landscape', columns:'auto', font:7, margin:0, line:1.6, zoom:1, sourceMode:false };
@@ -600,7 +712,7 @@ button { cursor:pointer; }
     state.orientation=stored?.orientation==='portrait'?'portrait':'landscape';
     state.columns=stored?.columns||'auto'; state.font=stored?.font??7; state.margin=stored?.margin??0; state.line=stored?.line??1.6;
   } catch { rich.innerHTML=markdownToHtml(exampleMarkdown); showingExample=true; }
-  syncControls(); syncScreen();
+  setupGuidedDemo(); syncControls(); syncScreen();
   if (document.fonts?.ready) document.fonts.ready.then(render);
 })();
 
