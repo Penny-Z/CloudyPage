@@ -3,7 +3,7 @@
 (() => {
   const $ = id => document.getElementById(id);
   const rich = $('richEditor'), source = $('markdownEditor'), pages = $('pages'), stage = $('previewStage');
-  let currentScreen = null;
+  let currentScreen = null, bypassLeavePrompt = false;
   function syncScreen() {
     const nextScreen = location.hash === '#editor' ? 'editor' : 'home';
     if (nextScreen === currentScreen) return;
@@ -15,7 +15,23 @@
     window.scrollTo(0, 0);
     if (nextScreen === 'editor') requestAnimationFrame(render);
   }
-  window.addEventListener('hashchange', syncScreen);
+  function openLeaveDialog() { if (!$('leaveDialog').open) $('leaveDialog').showModal(); }
+  function goHome() {
+    bypassLeavePrompt=true;
+    if ($('leaveDialog').open) $('leaveDialog').close();
+    location.hash='#home';
+    syncScreen();
+  }
+  function handleHashChange() {
+    if (currentScreen==='editor' && location.hash!=='#editor' && !bypassLeavePrompt && hasUnsavedDraft()) {
+      history.replaceState(null,'',`${location.pathname}${location.search}#editor`);
+      openLeaveDialog();
+      return;
+    }
+    bypassLeavePrompt=false;
+    syncScreen();
+  }
+  window.addEventListener('hashchange', handleHashChange);
   function setupGuidedDemo() {
     const demo = $('guidedDemo');
     if (!demo) return;
@@ -517,10 +533,24 @@
     try { const drafts=JSON.parse(localStorage.getItem(draftsKey)||'[]'); return Array.isArray(drafts)?drafts:[]; }
     catch { return []; }
   }
+  function currentDraftState() { return {html:rich.innerHTML,orientation:state.orientation,columns:state.columns,font:state.font,margin:state.margin,line:state.line}; }
+  function draftSignature(draft) { return JSON.stringify([draft.html,draft.orientation,draft.columns,draft.font,draft.margin,draft.line]); }
+  function hasUnsavedDraft() {
+    const current=currentDraftState();
+    const defaultExample=current.html===exampleHtml && current.orientation==='landscape' && current.columns==='auto' && current.font===7 && current.margin===0 && current.line===1.6;
+    return !defaultExample && !readDrafts().some(draft=>draftSignature(draft)===draftSignature(current));
+  }
   function updateDraftsButton() { $('openDraftsBtn').textContent=`草稿箱 (${readDrafts().length})`; }
   function renderDrafts() {
     const list=$('draftList'), drafts=readDrafts(); list.replaceChildren();
     $('draftsEmpty').hidden=drafts.length>0;
+    const example=document.createElement('article'); example.className='saved-draft example-draft';
+    const exampleInfo=document.createElement('div'); exampleInfo.className='saved-draft-info';
+    const exampleTitle=document.createElement('div'); exampleTitle.className='saved-draft-title'; exampleTitle.textContent='内置示例 · 数据分析与机器学习速查';
+    const exampleHint=document.createElement('div'); exampleHint.className='saved-draft-date'; exampleHint.textContent='可随时载入的默认排版案例';
+    const exampleActions=document.createElement('div'); exampleActions.className='saved-draft-actions';
+    const exampleOpen=document.createElement('button'); exampleOpen.type='button'; exampleOpen.textContent='载入'; exampleOpen.dataset.openExample='true';
+    exampleInfo.append(exampleTitle,exampleHint); exampleActions.append(exampleOpen); example.append(exampleInfo,exampleActions); list.append(example);
     drafts.sort((a,b)=>new Date(b.updatedAt)-new Date(a.updatedAt)).forEach(draft=>{
       const row=document.createElement('article'); row.className='saved-draft';
       const info=document.createElement('div'); info.className='saved-draft-info';
@@ -534,16 +564,17 @@
     });
     updateDraftsButton();
   }
-  function saveNamedDraft() {
+  function saveNamedDraft(showList=true) {
     const suggested=rich.querySelector('h1,h2,h3')?.textContent.trim()||'未命名草稿';
     const title=prompt('给这份草稿起个名字：',suggested);
-    if (title===null) return;
+    if (title===null) return false;
     const drafts=readDrafts();
     drafts.unshift({ id:`${Date.now()}-${Math.random().toString(36).slice(2,8)}`, title:title.trim()||'未命名草稿', html:rich.innerHTML, orientation:state.orientation, columns:state.columns, font:state.font, margin:state.margin, line:state.line, updatedAt:new Date().toISOString() });
     try {
       localStorage.setItem(draftsKey,JSON.stringify(drafts)); save(); renderDrafts();
-      $('saveStatus').textContent='● 草稿已另存'; $('draftsDialog').showModal();
-    } catch { $('saveStatus').textContent='● 草稿保存失败，请减少草稿数量'; }
+      $('saveStatus').textContent='● 草稿已另存'; if (showList) $('draftsDialog').showModal();
+      return true;
+    } catch { $('saveStatus').textContent='● 草稿保存失败，请减少草稿数量'; return false; }
   }
   function schedule() {
     $('saveStatus').textContent = '● 正在保存…';
@@ -667,13 +698,29 @@
   [['fontSlider','font'],['marginSlider','margin'],['lineSlider','line']].forEach(([id,field])=>$(id).addEventListener('input',()=>{ state[field]=Number($(id).value); syncControls(); schedule(); }));
   $('zoomOut').addEventListener('click',()=>{ state.zoom=Math.max(.5,state.zoom-.1); render(); });
   $('zoomIn').addEventListener('click',()=>{ state.zoom=Math.min(1.8,state.zoom+.1); render(); });
-  $('saveDraftBtn').addEventListener('click',saveNamedDraft);
+  $('saveDraftBtn').addEventListener('click',()=>saveNamedDraft());
   $('openDraftsBtn').addEventListener('click',()=>{ renderDrafts(); $('draftsDialog').showModal(); });
   $('closeDraftsBtn').addEventListener('click',()=>$('draftsDialog').close());
+  document.querySelector('.editor-home-link').addEventListener('click',event=>{
+    if (!hasUnsavedDraft()) return;
+    event.preventDefault(); openLeaveDialog();
+  });
+  $('cancelLeaveBtn').addEventListener('click',()=>$('leaveDialog').close());
+  $('leaveWithoutDraftBtn').addEventListener('click',()=>{ save(); goHome(); });
+  $('saveAndLeaveBtn').addEventListener('click',()=>{
+    $('leaveDialog').close();
+    if (saveNamedDraft(false)) goHome();
+  });
   $('draftList').addEventListener('click',event=>{
-    const open=event.target.closest('[data-open-draft]'), remove=event.target.closest('[data-delete-draft]');
+    const example=event.target.closest('[data-open-example]'), open=event.target.closest('[data-open-draft]'), remove=event.target.closest('[data-delete-draft]');
     const drafts=readDrafts();
-    if (open) {
+    if (example) {
+      if (hasUnsavedDraft() && !confirm('载入内置示例会替换当前编辑区。继续吗？')) return;
+      save(); rich.innerHTML=exampleHtml; state.orientation='landscape'; state.columns='auto';
+      state.font=7; state.margin=0; state.line=1.6; showingExample=true; sourceDirty=false;
+      if (state.sourceMode) source.value=exampleMarkdown;
+      syncControls(); schedule(); $('draftsDialog').close();
+    } else if (open) {
       const draft=drafts.find(item=>item.id===open.dataset.openDraft);
       if (!draft || !confirm(`打开“${draft.title}”会替换当前编辑区。继续吗？`)) return;
       save(); rich.innerHTML=draft.html; state.orientation=draft.orientation||'landscape'; state.columns=draft.columns||'auto';
@@ -690,6 +737,8 @@
   });
   $('downloadMdBtn').addEventListener('click',()=>{ const blob=new Blob([state.sourceMode?source.value:htmlToMarkdown(rich)],{type:'text/markdown;charset=utf-8'}); const link=document.createElement('a'); link.href=URL.createObjectURL(blob); link.download='cheatsheet.md'; link.click(); setTimeout(()=>URL.revokeObjectURL(link.href),1000); });
   $('printBtn').addEventListener('click',()=>{ render(); window.print(); });
+  window.addEventListener('beforeunload',event=>{ if (currentScreen==='editor' && hasUnsavedDraft()) { event.preventDefault(); event.returnValue=''; } });
+  window.addEventListener('pagehide',save);
   window.addEventListener('resize',()=>{ if(renderFrame) cancelAnimationFrame(renderFrame); renderFrame=requestAnimationFrame(render); });
   try {
     const stored=JSON.parse(localStorage.getItem(key)||'null');

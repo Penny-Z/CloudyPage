@@ -84,10 +84,12 @@ button { cursor:pointer; }
 @media(max-width:650px) { .guided-demo { padding-top:55px; }.module-overview { grid-template-columns:1fr; gap:12px; }.module-card { min-height:220px; padding:22px; }.module-card h3 { margin-top:22px; font-size:22px; }.demo-workspace { grid-template-columns:1fr; }.demo-edit-pane { border-right:0; border-bottom:1px solid #e5ebf3; }.demo-document { min-height:155px; }.demo-preview-pane { min-height:260px; }.demo-paper-stage { padding:9px 12px 18px; }.demo-paper { max-width:450px; }.demo-window-brand { font-size:11px; }.demo-tag { display:none; }.demo-window-actions { gap:0; }.demo-window-actions button { padding:5px; font-size:10px; } }
 .features-section { border-top:1px solid #e8eef6; }.section-intro { margin-bottom:35px; }.section-intro h2,.start-section h2 { margin:14px 0; color:#172b44; font-size:clamp(34px,3.3vw,48px); line-height:1.25; letter-spacing:-.05em; }.section-intro p,.start-section p { margin:0; color:#697b91; font-size:15px; line-height:1.8; }
 .feature-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:17px; }.feature-card { min-height:229px; padding:25px 26px; border:1px solid #e1e9f3; border-radius:15px; background:#fff; box-shadow:0 8px 28px #5076a00b; }.feature-icon { display:grid; place-items:center; width:38px; height:38px; border-radius:11px; background:#edf4ff; color:#426bcb; font-size:21px; }.feature-number { display:block; margin-top:22px; color:#7c9ac7; font-size:10px; font-weight:800; letter-spacing:.08em; }.feature-card h3 { margin:8px 0; color:#20364e; font-size:19px; }.feature-card p { margin:0; color:#6d7b8c; font-size:13px; line-height:1.75; }
+.source-callout { display:flex; align-items:center; justify-content:space-between; gap:28px; margin-top:23px; padding:28px 31px; border:1px solid #dce7f4; border-radius:15px; background:#f2f7ff; }.source-callout h3 { margin:9px 0 6px; color:#20364e; font-size:21px; }.source-callout p { max-width:680px; margin:0; color:#63778f; font-size:13px; line-height:1.75; }.source-callout a { flex:none; padding:11px 15px; border-radius:8px; background:#416bd2; color:#fff; font-size:12px; font-weight:700; text-decoration:none; }.source-callout a:hover { background:#3159b5; }
 .start-section { display:flex; align-items:end; justify-content:space-between; gap:30px; margin-bottom:55px; border-radius:22px; background:#edf5ff; }.start-cta { display:inline-flex; align-items:center; justify-content:space-between; gap:35px; min-width:156px; padding:15px 18px; border-radius:10px; background:#426bd5; color:#fff!important; font-size:14px; font-weight:700; }.start-cta:hover { background:#3057b4; }
 .home-footer { max-width:1480px; min-height:72px; margin:auto; padding:22px clamp(24px,4.5vw,72px); display:flex; justify-content:space-between; gap:20px; border-top:1px solid #e7edf5; color:#8a98aa; font-size:12px; }
 @media(max-width:1000px) { .home-hero { grid-template-columns:1fr; padding-top:70px; }.hero-copy { max-width:690px; }.hero-visual { width:min(100%,720px); margin:auto; }.home-hero { gap:7px; }.feature-grid { gap:10px; } }
 @media(max-width:650px) { .home-header { height:65px; padding:0 20px; }.home-nav { display:none; }.home-header-cta { margin-left:auto; padding:9px 11px; gap:7px; }.home-brand { font-size:17px; }.home-brand small { font-size:11px; }.home-mark { width:29px; height:29px; font-size:19px; }.home-hero { min-height:0; padding:64px 23px 55px; display:block; }.hero-copy h1 { font-size:clamp(42px,10vw,60px); }.hero-copy p { font-size:15px; }.hero-actions { flex-wrap:wrap; }.hero-visual { margin-top:44px; padding-bottom:28px; }.visual-window-body { height:250px; }.visual-side { padding:17px 10px; }.visual-sheet-wrap { padding:13px 8px; }.visual-sheet { padding:10px 8px; }.visual-float { right:0; bottom:0; }.home-section { padding:65px 23px; }.feature-grid { grid-template-columns:1fr; }.feature-card { min-height:0; }.start-section { margin:0 14px 30px; padding:38px 22px; display:block; }.start-cta { margin-top:25px; }.home-footer { padding:23px; flex-direction:column; gap:6px; } }
+@media(max-width:650px) { .source-callout { display:block; padding:25px; }.source-callout a { display:inline-block; margin-top:17px; } }
 .topbar { height:57px; display:flex; align-items:center; justify-content:space-between; padding:0 19px; border-bottom:1px solid var(--border); background:#fff; gap:12px; }
 .brand,.top-actions { display:flex; align-items:center; gap:12px; white-space:nowrap; }
 .brand-icon { color:#2f7451; font-size:24px; line-height:1; }
@@ -101,6 +103,7 @@ button { cursor:pointer; }
 .top-actions .primary { background:#2f7451; color:#fff; }
 .top-actions .primary:hover { background:#23603f; }
 .drafts-dialog { width:min(520px,calc(100vw - 32px)); max-height:min(76vh,680px); padding:0; border:1px solid #e0e6e3; border-radius:14px; color:#25332c; box-shadow:0 18px 60px #17291d38; }.drafts-dialog::backdrop { background:#15231d66; backdrop-filter:blur(2px); }.drafts-head { display:flex; align-items:flex-start; justify-content:space-between; padding:20px 22px 15px; border-bottom:1px solid #edf0ee; }.drafts-head h2 { margin:0; font-size:18px; }.drafts-head p { margin:5px 0 0; color:#7b8780; font-size:12px; }.dialog-close { width:30px; height:30px; border:0; border-radius:7px; background:#f3f5f4; color:#65716a; font-size:22px; line-height:1; }.draft-list { display:grid; gap:9px; max-height:55vh; overflow:auto; padding:15px 18px; }.saved-draft { display:flex; align-items:center; gap:12px; padding:12px; border:1px solid #e7ebe8; border-radius:10px; }.saved-draft-info { min-width:0; flex:1; }.saved-draft-title { overflow:hidden; color:#29372f; font-size:13px; font-weight:700; text-overflow:ellipsis; white-space:nowrap; }.saved-draft-date { margin-top:4px; color:#89938d; font-size:11px; }.saved-draft-actions { display:flex; gap:6px; }.saved-draft-actions button { padding:6px 9px; border:1px solid #e1e7e3; border-radius:6px; background:#fff; color:#506057; font-size:11px; }.saved-draft-actions [data-open-draft] { border-color:#c5ddcc; background:#f1f8f3; color:#276541; }.drafts-empty { padding:25px 22px; color:#7b8780; font-size:13px; text-align:center; }
+.saved-draft.example-draft { border-color:#d8e5f6; background:#f7faff; }.leave-dialog { width:min(480px,calc(100vw - 32px)); padding:27px; border:1px solid #dfe7e2; border-radius:14px; color:#25332c; box-shadow:0 18px 60px #17291d38; }.leave-dialog::backdrop { background:#15231d66; backdrop-filter:blur(2px); }.leave-dialog h2 { margin:0 0 11px; font-size:20px; }.leave-dialog p { margin:0; color:#65736a; font-size:13px; line-height:1.7; }.leave-actions { display:flex; justify-content:flex-end; flex-wrap:wrap; gap:8px; margin-top:24px; }.leave-actions button { padding:9px 12px; border:1px solid #dce5df; border-radius:7px; background:#fff; color:#506057; font-size:12px; font-weight:700; }.leave-actions #saveAndLeaveBtn { border-color:#2f7451; background:#2f7451; color:#fff; }
 .workspace { height:calc(100vh - 57px); min-height:0; display:grid; grid-template-columns:minmax(330px,39%) minmax(0,61%); }
 .editing-pane { min-width:0; min-height:0; background:#fff; border-right:1px solid #d7dce0; display:flex; flex-direction:column; }
 .tabs { display:flex; align-items:center; gap:5px; height:53px; padding:8px 14px; border-bottom:1px solid #e8ebed; background:#f7f8fa; flex:none; }
@@ -222,7 +225,7 @@ button { cursor:pointer; }
           <aside class="demo-guide"><span class="demo-guide-step" id="demoGuideStep">01 / 先试试</span><h3 id="demoGuideTitle">每个按钮都有回应。</h3><p id="demoGuideText" aria-live="polite">试试源码编辑、加粗或高亮；切到“布局”还可以改变纸张方向、栏数和字号。</p><div class="demo-guide-hint">↗ 点击演示窗口中的按钮</div><a href="#editor" class="demo-guide-cta">打开完整排版器 <span aria-hidden="true">→</span></a></aside>
         </div>
       </section>
-      <section id="features" class="home-section features-section" aria-labelledby="featuresTitle"><div class="section-intro"><span class="section-kicker">WHY CLOUDYPAGE</span><h2 id="featuresTitle">少一点调整，<br>多一点专注。</h2><p>从一段长笔记，到一张真正能用的速查表。</p></div><div class="feature-grid"><article class="feature-card"><span class="feature-icon">✎</span><span class="feature-number">01 / 编辑</span><h3>写起来顺手</h3><p>粘贴 Markdown 后继续直接编辑。标题、列表、文字颜色和高亮，都可以随手调整。</p></article><article class="feature-card"><span class="feature-icon">▤</span><span class="feature-number">02 / 排版</span><h3>多栏自然流动</h3><p>内容依次填满每一栏。横向、纵向、字号和栏数都可调整，边写边看预览。</p></article><article class="feature-card"><span class="feature-icon">↗</span><span class="feature-number">03 / 带走</span><h3>一页随时可查</h3><p>打印或保存 PDF，也能下载 Markdown。编辑内容自动保存在当前浏览器。</p></article></div></section>
+      <section id="features" class="home-section features-section" aria-labelledby="featuresTitle"><div class="section-intro"><span class="section-kicker">WHY CLOUDYPAGE</span><h2 id="featuresTitle">少一点调整，<br>多一点专注。</h2><p>从一段长笔记，到一张真正能用的速查表。</p></div><div class="feature-grid"><article class="feature-card"><span class="feature-icon">✎</span><span class="feature-number">01 / 编辑</span><h3>写起来顺手</h3><p>粘贴 Markdown 后继续直接编辑。标题、列表、文字颜色和高亮，都可以随手调整。</p></article><article class="feature-card"><span class="feature-icon">▤</span><span class="feature-number">02 / 排版</span><h3>多栏自然流动</h3><p>内容依次填满每一栏。横向、纵向、字号和栏数都可调整，边写边看预览。</p></article><article class="feature-card"><span class="feature-icon">↗</span><span class="feature-number">03 / 带走</span><h3>一页随时可查</h3><p>打印或保存 PDF，也能下载 Markdown。编辑内容自动保存在当前浏览器。</p></article></div><div class="source-callout"><div><span class="section-kicker">OPEN SOURCE</span><h3>想按自己的习惯调整？</h3><p>前往 GitHub 下载原代码，可在非商业许可范围内微调功能与样式，做成适合自己的排版器。</p></div><a href="https://github.com/Penny-Z/CloudyPage" target="_blank" rel="noopener noreferrer">查看 GitHub 源码 <span aria-hidden="true">↗</span></a></div></section>
       <section id="use-cases" class="home-section use-cases-section" aria-labelledby="useCasesTitle"><div class="section-intro"><span class="section-kicker">MADE FOR QUICK REFERENCE</span><h2 id="useCasesTitle">一页速查，也适合这些场景。</h2><p>把常用信息压缩整理，放在需要快速查找的地方。</p></div><div class="feature-grid"><article class="feature-card"><span class="feature-icon">▤</span><span class="feature-number">01 / 考试</span><h3>制作 Cheatsheet</h3><p>整理公式、核心概念、解题步骤和易错点，考前复习或按规则准备考试资料。</p></article><article class="feature-card"><span class="feature-icon">⌂</span><span class="feature-number">02 / 课程</span><h3>课程复习提纲</h3><p>把章节脉络、知识联系和重点问题放到一页，快速回顾课程全貌。</p></article><article class="feature-card"><span class="feature-icon">⌕</span><span class="feature-number">03 / 开卷</span><h3>开卷资料索引</h3><p>按主题、题型或关键词整理资料位置，减少考试或查阅时翻找的时间。</p></article><article class="feature-card"><span class="feature-icon">✓</span><span class="feature-number">04 / 实验与实习</span><h3>流程和检查清单</h3><p>集中记录操作步骤、参数范围、注意事项和完成前的核对项目。</p></article><article class="feature-card"><span class="feature-icon">↗</span><span class="feature-number">05 / 会议与汇报</span><h3>提纲和讲述提示</h3><p>把关键数据、汇报顺序、过渡提示和待确认问题整理成随手可看的提纲。</p></article><article class="feature-card"><span class="feature-icon">⌘</span><span class="feature-number">06 / 项目与工具</span><h3>命令和术语速查</h3><p>归纳常用命令、字段含义、操作步骤和项目约定，方便团队随时查阅。</p></article></div></section>
       <section id="how-it-works" class="home-section start-section" aria-labelledby="startTitle"><div><span class="section-kicker">GET STARTED</span><h2 id="startTitle">打开，粘贴，<br>排成你的云中笺。</h2><p>无需注册，也无需上传笔记。现在就用一段内容试试。</p></div><a class="start-cta" href="#editor">开始排版 <span aria-hidden="true">→</span></a></section>
     </main>
@@ -231,7 +234,7 @@ button { cursor:pointer; }
   <div id="appScreen" class="app-screen" hidden>
   <header class="topbar">
     <div class="brand"><a class="editor-home-link" href="#home" title="返回首页" aria-label="返回 CloudyPage 首页"><span class="brand-icon">☁</span><strong>CloudyPage <span>云中笺</span></strong></a><span class="mode-label">Cheatsheet 排版器</span><span class="save-status" id="saveStatus">● 已自动保存</span></div>
-    <div class="top-actions"><button id="saveDraftBtn" class="quiet draft-save" title="另存一份命名草稿">保存草稿</button><button id="openDraftsBtn" class="quiet" title="查看已保存的草稿">草稿箱</button><button id="downloadMdBtn" class="quiet" title="下载 Markdown">下载 .md</button><button id="printBtn" class="primary">↓ 打印 / PDF</button></div>
+    <div class="top-actions"><button id="saveDraftBtn" class="quiet draft-save" title="另存一份命名草稿">保存草稿</button><button id="openDraftsBtn" class="quiet" title="查看草稿和内置示例">草稿箱</button><button id="downloadMdBtn" class="quiet" title="下载 Markdown">下载 .md</button><button id="printBtn" class="primary">↓ 打印 / PDF</button></div>
   </header>
   <main class="workspace">
     <section class="editing-pane" aria-label="内容编辑">
@@ -255,7 +258,7 @@ button { cursor:pointer; }
         </div>
         <div id="richEditor" class="rich-editor" contenteditable="true" role="textbox" aria-multiline="true" aria-label="可直接编辑的速查表内容" spellcheck="true"></div>
         <textarea id="markdownEditor" class="markdown-editor" aria-label="Markdown 源码" spellcheck="false" hidden></textarea>
-        <div class="editor-foot"><span>可直接粘贴 Markdown；选中文字后使用上方按钮设置格式</span><span id="charCount">0 字</span></div>
+        <div class="editor-foot"><span>可粘贴 Markdown；草稿箱中可随时载入内置示例</span><span id="charCount">0 字</span></div>
       </div>
     </section>
     <section class="preview-pane" aria-label="多栏排版预览">
@@ -270,13 +273,18 @@ button { cursor:pointer; }
     <div id="draftList" class="draft-list"></div>
     <p id="draftsEmpty" class="drafts-empty" hidden>还没有保存的草稿。点击“保存草稿”可另存一份。</p>
   </dialog>
+  <dialog id="leaveDialog" class="leave-dialog" aria-labelledby="leaveTitle">
+    <h2 id="leaveTitle">离开前保存一份草稿？</h2>
+    <p>当前编辑内容已自动保存在此浏览器。另存为命名草稿后，还能在草稿箱中单独找到这一版。</p>
+    <div class="leave-actions"><button id="cancelLeaveBtn" type="button">继续编辑</button><button id="leaveWithoutDraftBtn" type="button">直接离开</button><button id="saveAndLeaveBtn" type="button">保存草稿并离开</button></div>
+  </dialog>
   <script>
 /* Required Notice: Copyright 2026 Penny-Z. */
 /* Required Notice: Licensed under the PolyForm Noncommercial License 1.0.0: https://polyformproject.org/licenses/noncommercial/1.0.0 */
 (() => {
   const $ = id => document.getElementById(id);
   const rich = $('richEditor'), source = $('markdownEditor'), pages = $('pages'), stage = $('previewStage');
-  let currentScreen = null;
+  let currentScreen = null, bypassLeavePrompt = false;
   function syncScreen() {
     const nextScreen = location.hash === '#editor' ? 'editor' : 'home';
     if (nextScreen === currentScreen) return;
@@ -288,7 +296,23 @@ button { cursor:pointer; }
     window.scrollTo(0, 0);
     if (nextScreen === 'editor') requestAnimationFrame(render);
   }
-  window.addEventListener('hashchange', syncScreen);
+  function openLeaveDialog() { if (!$('leaveDialog').open) $('leaveDialog').showModal(); }
+  function goHome() {
+    bypassLeavePrompt=true;
+    if ($('leaveDialog').open) $('leaveDialog').close();
+    location.hash='#home';
+    syncScreen();
+  }
+  function handleHashChange() {
+    if (currentScreen==='editor' && location.hash!=='#editor' && !bypassLeavePrompt && hasUnsavedDraft()) {
+      history.replaceState(null,'',`${location.pathname}${location.search}#editor`);
+      openLeaveDialog();
+      return;
+    }
+    bypassLeavePrompt=false;
+    syncScreen();
+  }
+  window.addEventListener('hashchange', handleHashChange);
   function setupGuidedDemo() {
     const demo = $('guidedDemo');
     if (!demo) return;
@@ -790,10 +814,24 @@ button { cursor:pointer; }
     try { const drafts=JSON.parse(localStorage.getItem(draftsKey)||'[]'); return Array.isArray(drafts)?drafts:[]; }
     catch { return []; }
   }
+  function currentDraftState() { return {html:rich.innerHTML,orientation:state.orientation,columns:state.columns,font:state.font,margin:state.margin,line:state.line}; }
+  function draftSignature(draft) { return JSON.stringify([draft.html,draft.orientation,draft.columns,draft.font,draft.margin,draft.line]); }
+  function hasUnsavedDraft() {
+    const current=currentDraftState();
+    const defaultExample=current.html===exampleHtml && current.orientation==='landscape' && current.columns==='auto' && current.font===7 && current.margin===0 && current.line===1.6;
+    return !defaultExample && !readDrafts().some(draft=>draftSignature(draft)===draftSignature(current));
+  }
   function updateDraftsButton() { $('openDraftsBtn').textContent=`草稿箱 (${readDrafts().length})`; }
   function renderDrafts() {
     const list=$('draftList'), drafts=readDrafts(); list.replaceChildren();
     $('draftsEmpty').hidden=drafts.length>0;
+    const example=document.createElement('article'); example.className='saved-draft example-draft';
+    const exampleInfo=document.createElement('div'); exampleInfo.className='saved-draft-info';
+    const exampleTitle=document.createElement('div'); exampleTitle.className='saved-draft-title'; exampleTitle.textContent='内置示例 · 数据分析与机器学习速查';
+    const exampleHint=document.createElement('div'); exampleHint.className='saved-draft-date'; exampleHint.textContent='可随时载入的默认排版案例';
+    const exampleActions=document.createElement('div'); exampleActions.className='saved-draft-actions';
+    const exampleOpen=document.createElement('button'); exampleOpen.type='button'; exampleOpen.textContent='载入'; exampleOpen.dataset.openExample='true';
+    exampleInfo.append(exampleTitle,exampleHint); exampleActions.append(exampleOpen); example.append(exampleInfo,exampleActions); list.append(example);
     drafts.sort((a,b)=>new Date(b.updatedAt)-new Date(a.updatedAt)).forEach(draft=>{
       const row=document.createElement('article'); row.className='saved-draft';
       const info=document.createElement('div'); info.className='saved-draft-info';
@@ -807,16 +845,17 @@ button { cursor:pointer; }
     });
     updateDraftsButton();
   }
-  function saveNamedDraft() {
+  function saveNamedDraft(showList=true) {
     const suggested=rich.querySelector('h1,h2,h3')?.textContent.trim()||'未命名草稿';
     const title=prompt('给这份草稿起个名字：',suggested);
-    if (title===null) return;
+    if (title===null) return false;
     const drafts=readDrafts();
     drafts.unshift({ id:`${Date.now()}-${Math.random().toString(36).slice(2,8)}`, title:title.trim()||'未命名草稿', html:rich.innerHTML, orientation:state.orientation, columns:state.columns, font:state.font, margin:state.margin, line:state.line, updatedAt:new Date().toISOString() });
     try {
       localStorage.setItem(draftsKey,JSON.stringify(drafts)); save(); renderDrafts();
-      $('saveStatus').textContent='● 草稿已另存'; $('draftsDialog').showModal();
-    } catch { $('saveStatus').textContent='● 草稿保存失败，请减少草稿数量'; }
+      $('saveStatus').textContent='● 草稿已另存'; if (showList) $('draftsDialog').showModal();
+      return true;
+    } catch { $('saveStatus').textContent='● 草稿保存失败，请减少草稿数量'; return false; }
   }
   function schedule() {
     $('saveStatus').textContent = '● 正在保存…';
@@ -940,13 +979,29 @@ button { cursor:pointer; }
   [['fontSlider','font'],['marginSlider','margin'],['lineSlider','line']].forEach(([id,field])=>$(id).addEventListener('input',()=>{ state[field]=Number($(id).value); syncControls(); schedule(); }));
   $('zoomOut').addEventListener('click',()=>{ state.zoom=Math.max(.5,state.zoom-.1); render(); });
   $('zoomIn').addEventListener('click',()=>{ state.zoom=Math.min(1.8,state.zoom+.1); render(); });
-  $('saveDraftBtn').addEventListener('click',saveNamedDraft);
+  $('saveDraftBtn').addEventListener('click',()=>saveNamedDraft());
   $('openDraftsBtn').addEventListener('click',()=>{ renderDrafts(); $('draftsDialog').showModal(); });
   $('closeDraftsBtn').addEventListener('click',()=>$('draftsDialog').close());
+  document.querySelector('.editor-home-link').addEventListener('click',event=>{
+    if (!hasUnsavedDraft()) return;
+    event.preventDefault(); openLeaveDialog();
+  });
+  $('cancelLeaveBtn').addEventListener('click',()=>$('leaveDialog').close());
+  $('leaveWithoutDraftBtn').addEventListener('click',()=>{ save(); goHome(); });
+  $('saveAndLeaveBtn').addEventListener('click',()=>{
+    $('leaveDialog').close();
+    if (saveNamedDraft(false)) goHome();
+  });
   $('draftList').addEventListener('click',event=>{
-    const open=event.target.closest('[data-open-draft]'), remove=event.target.closest('[data-delete-draft]');
+    const example=event.target.closest('[data-open-example]'), open=event.target.closest('[data-open-draft]'), remove=event.target.closest('[data-delete-draft]');
     const drafts=readDrafts();
-    if (open) {
+    if (example) {
+      if (hasUnsavedDraft() && !confirm('载入内置示例会替换当前编辑区。继续吗？')) return;
+      save(); rich.innerHTML=exampleHtml; state.orientation='landscape'; state.columns='auto';
+      state.font=7; state.margin=0; state.line=1.6; showingExample=true; sourceDirty=false;
+      if (state.sourceMode) source.value=exampleMarkdown;
+      syncControls(); schedule(); $('draftsDialog').close();
+    } else if (open) {
       const draft=drafts.find(item=>item.id===open.dataset.openDraft);
       if (!draft || !confirm(`打开“${draft.title}”会替换当前编辑区。继续吗？`)) return;
       save(); rich.innerHTML=draft.html; state.orientation=draft.orientation||'landscape'; state.columns=draft.columns||'auto';
@@ -963,6 +1018,8 @@ button { cursor:pointer; }
   });
   $('downloadMdBtn').addEventListener('click',()=>{ const blob=new Blob([state.sourceMode?source.value:htmlToMarkdown(rich)],{type:'text/markdown;charset=utf-8'}); const link=document.createElement('a'); link.href=URL.createObjectURL(blob); link.download='cheatsheet.md'; link.click(); setTimeout(()=>URL.revokeObjectURL(link.href),1000); });
   $('printBtn').addEventListener('click',()=>{ render(); window.print(); });
+  window.addEventListener('beforeunload',event=>{ if (currentScreen==='editor' && hasUnsavedDraft()) { event.preventDefault(); event.returnValue=''; } });
+  window.addEventListener('pagehide',save);
   window.addEventListener('resize',()=>{ if(renderFrame) cancelAnimationFrame(renderFrame); renderFrame=requestAnimationFrame(render); });
   try {
     const stored=JSON.parse(localStorage.getItem(key)||'null');
