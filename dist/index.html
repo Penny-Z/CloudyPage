@@ -40,10 +40,14 @@
         </div>
       </section>
       <section id="demo" class="home-section guided-demo" aria-labelledby="demoTitle">
-        <div class="demo-intro"><span class="section-kicker">INTERACTIVE TOUR</span><h2 id="demoTitle">先点点看，再开始写。</h2><p>这是一个可操作的缩小版排版器。点选按钮，看看文字与纸张预览如何变化。</p></div>
+        <div class="demo-intro"><span class="section-kicker">INTERACTIVE TOUR</span><h2 id="demoTitle">先写内容，再排成一页。</h2><p>CloudyPage 分为两个模块。先认识它们，再到下方的演示窗口亲手试试。</p></div>
+        <div class="module-overview" aria-label="文字模块与布局模块介绍">
+          <article class="module-card is-active" data-module-card="text"><span class="module-count">01 / 文字模块</span><div class="module-card-icon" aria-hidden="true">✎</div><h3>写下内容，标出重点。</h3><p>粘贴 Markdown，也可以像写笔记一样直接编辑。标题、加粗、高亮和列表，让长笔记更容易查找。</p><button type="button" data-demo-open="text" aria-controls="guidedDemo">体验文字模块 <span aria-hidden="true">→</span></button></article>
+          <article class="module-card" data-module-card="layout"><span class="module-count">02 / 布局模块</span><div class="module-card-icon" aria-hidden="true">▤</div><h3>决定这一页怎么排。</h3><p>选择横版或竖版，调整栏数与字号。右侧实时预览会展示内容如何顺序填入每一栏。</p><button type="button" data-demo-open="layout" aria-controls="guidedDemo">体验布局模块 <span aria-hidden="true">→</span></button></article>
+        </div>
         <div id="guidedDemo" class="guided-demo-grid">
           <div class="demo-window" aria-label="CloudyPage 功能演示窗口">
-            <div class="demo-window-bar"><div class="demo-window-brand"><span class="demo-cloud">☁</span><strong>CloudyPage <span>云中笺</span></strong><span class="demo-tag">功能演示</span></div><div class="demo-window-actions"><button type="button" data-demo-action="download">下载 .md</button><button type="button" data-demo-action="print">打印 / PDF</button></div></div>
+            <div class="demo-window-bar"><div class="demo-window-brand"><span class="demo-cloud">☁</span><strong>CloudyPage <span>云中笺</span></strong><span id="demoTag" class="demo-tag">文字模块演示</span></div><div class="demo-window-actions"><button type="button" data-demo-action="download">下载 .md</button><button type="button" data-demo-action="print">打印 / PDF</button></div></div>
             <div class="demo-workspace">
               <div class="demo-edit-pane">
                 <div class="demo-tabs" role="tablist" aria-label="演示工具栏"><button type="button" data-demo-tab="text" role="tab" aria-selected="true">▤ 文字</button><button type="button" data-demo-tab="layout" role="tab" aria-selected="false">▦ 布局</button></div>

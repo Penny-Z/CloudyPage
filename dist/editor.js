@@ -47,6 +47,15 @@
       $('demoGuideTitle').textContent = title;
       $('demoGuideText').textContent = description;
     }
+    function selectDemoTab(name) {
+      const layout = name === 'layout';
+      $('demoTextTools').hidden = layout;
+      $('demoLayoutTools').hidden = !layout;
+      $('demoTag').textContent = layout ? '布局模块演示' : '文字模块演示';
+      demo.querySelectorAll('[data-demo-tab]').forEach(button => button.setAttribute('aria-selected', String(button.dataset.demoTab === name)));
+      document.querySelectorAll('[data-module-card]').forEach(card => card.classList.toggle('is-active', card.dataset.moduleCard === name));
+      showHelp(name);
+    }
     function renderDemo() {
       for (const name of ['bold','heading','highlight','list']) windowEl.classList.toggle(`demo-${name}`, demoState[name]);
       richContent.hidden = demoState.markdown;
@@ -67,11 +76,7 @@
     demo.addEventListener('click', event => {
       const tab = event.target.closest('[data-demo-tab]');
       if (tab) {
-        const layout = tab.dataset.demoTab === 'layout';
-        $('demoTextTools').hidden = layout;
-        $('demoLayoutTools').hidden = !layout;
-        demo.querySelectorAll('[data-demo-tab]').forEach(button => button.setAttribute('aria-selected', String(button === tab)));
-        showHelp(layout ? 'layout' : 'text');
+        selectDemoTab(tab.dataset.demoTab);
         return;
       }
       const button = event.target.closest('[data-demo-action]');
@@ -83,8 +88,13 @@
       showHelp(action);
       renderDemo();
     });
+    document.querySelectorAll('[data-demo-open]').forEach(button => button.addEventListener('click', () => {
+      selectDemoTab(button.dataset.demoOpen);
+      demo.scrollIntoView({ behavior:'smooth', block:'start' });
+    }));
     fontInput.addEventListener('input', () => { demoState.font = Number(fontInput.value); showHelp('font'); renderDemo(); });
     renderDemo();
+    selectDemoTab('text');
   }
   const key = 'zhijian-cheatsheet-v2';
   const oldKey = 'zhijian-cheatsheet-v1';
