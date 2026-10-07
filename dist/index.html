@@ -62,7 +62,16 @@
 - 易错提醒</pre></div>
                 <div class="demo-editor-foot">演示内容不会写入你的笔记</div>
               </div>
-                <div class="demo-preview-pane"><div class="demo-preview-head"><span id="demoPreviewLabel">A4 横向 · 4 栏 · 8 pt</span><span>实时预览</span></div><div class="demo-paper-stage"><div id="demoPaper" class="demo-paper"><div id="demoPaperColumns" class="demo-paper-columns"><div class="demo-paper-column"><strong class="demo-paper-title">期末复习速查</strong><p>把重点放在一页里，复习时能更快找到。</p><p class="demo-paper-accent">核心概念：先理解，再记住公式。</p><p class="demo-paper-list">概念与定义</p><p class="demo-paper-list">关键步骤</p><p class="demo-paper-list">易错提醒</p></div><div class="demo-paper-column"><strong>整理信息</strong><p>标题区分层级，列表梳理重点。</p><p>公式、例题和备注可以紧凑排列。</p></div><div class="demo-paper-column"><strong>顺序填栏</strong><p>内容从左到右依次进入下一栏。</p><p>调整字号即可改变每栏容量。</p></div><div class="demo-paper-column"><strong>随时带走</strong><p>编辑完成后保存 Markdown。</p><p>打印或导出清晰的 PDF。</p></div></div></div></div></div>
+                <div class="demo-preview-pane"><div class="demo-preview-head"><span id="demoPreviewLabel">A4 横向 · 4 栏 · 8 pt</span><span>实时预览</span></div><div class="demo-paper-stage"><div id="demoPaper" class="demo-paper"><div id="demoPaperColumns" class="demo-paper-columns">
+                  <strong class="demo-paper-title">期末复习速查</strong>
+                  <p>把重点放在一页里，复习时能更快找到。</p><p class="demo-paper-accent">核心概念：先理解，再记住公式。</p>
+                  <strong>基础概念</strong><p class="demo-paper-list">均值概括数据的平均水平，容易受到极端值影响。</p><p class="demo-paper-list">中位数表示排序后居中的位置，适合描述偏态分布。</p><p class="demo-paper-list">标准差描述观测值围绕均值的离散程度。</p>
+                  <strong>数据处理</strong><p>先检查缺失值、重复记录和异常值，再决定保留或修正。预处理时只用训练集估计参数，避免把测试集信息带回模型。</p><p>类别变量可以编码，数值变量可以标准化；每一步都应记录原始口径与处理规则。</p>
+                  <strong>分析步骤</strong><p class="demo-paper-list">明确问题与目标。</p><p class="demo-paper-list">核对数据来源和单位。</p><p class="demo-paper-list">选择适合的图表和方法。</p><p class="demo-paper-list">解释结果与限制。</p>
+                  <strong>模型评估</strong><p>训练集用于拟合，验证集用于选择参数，测试集用于最终评估。时间序列应按时间顺序切分，防止未来信息泄漏。</p><p>分类任务关注准确率、召回率与错误类型；回归任务关注误差大小和残差模式。</p>
+                  <strong>易错提醒</strong><p>相关性不等于因果。样本量、选择偏差和遗漏变量都会影响结论。遇到异常结果，先回到数据和定义检查。</p><p>写速查表时，先保留结论，再补充必要条件和边界，避免只记住一个孤立公式。</p>
+                  <strong>输出与复盘</strong><p>把关键概念、步骤和例外整理成短句。调整字号与栏数后，检查每一栏的可读性，再打印或保存 PDF。</p>
+                </div></div></div></div>
             </div>
           </div>
           <aside class="demo-guide"><span class="demo-guide-step" id="demoGuideStep">01 / 先试试</span><h3 id="demoGuideTitle">每个按钮都有回应。</h3><p id="demoGuideText" aria-live="polite">点左侧的 Markdown、加粗或高亮；切到“布局”还可以改变纸张方向、栏数和字号。</p><div class="demo-guide-hint">↗ 点击演示窗口中的按钮</div><a href="#editor" class="demo-guide-cta">打开完整排版器 <span aria-hidden="true">→</span></a></aside>

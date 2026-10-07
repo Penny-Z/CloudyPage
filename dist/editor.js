@@ -347,7 +347,7 @@
   function makeFlow(html, columns, contentW, contentH, gap) {
     const flow = document.createElement('div'); flow.className = 'sheet-flow';
     flow.style.width = `${contentW}px`; flow.style.height = `${contentH}px`;
-    flow.style.columnCount = String(columns); flow.style.columnGap = `${gap}px`;
+    flow.style.columnCount = String(columns); flow.style.columnGap = `${gap}px`; flow.style.columnFill = 'auto';
     flow.style.fontSize = `${state.font * 96 / 72}px`; flow.style.lineHeight = String(state.line);
     flow.innerHTML = html;
     return flow;
