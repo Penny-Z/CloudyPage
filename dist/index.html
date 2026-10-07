@@ -1,0 +1,52 @@
+<!doctype html>
+<!-- Required Notice: Copyright 2026 Penny-Z. -->
+<!-- Required Notice: Licensed under the PolyForm Noncommercial License 1.0.0: https://polyformproject.org/licenses/noncommercial/1.0.0 -->
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f7f8fa">
+  <meta name="description" content="CloudyPage 云中笺：粘贴 Markdown，直接编辑格式，实时生成多栏 Cheatsheet。">
+  <title>CloudyPage 云中笺 · Cheatsheet 排版器</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%232f6c50'/%3E%3Cpath d='M14 15h36v34H14z' fill='white'/%3E%3Cpath d='M26 16v32M38 16v32' stroke='%239fc4aa' stroke-width='2'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="editor.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand"><span class="brand-icon">▥</span><strong>CloudyPage <span>云中笺</span></strong><span class="mode-label">Cheatsheet 排版器</span><span class="save-status" id="saveStatus">● 已自动保存</span></div>
+    <div class="top-actions"><button id="exampleBtn" class="quiet" title="载入示例">示例</button><button id="downloadMdBtn" class="quiet" title="下载 Markdown">下载 .md</button><button id="printBtn" class="primary">↓ 打印 / PDF</button></div>
+  </header>
+  <main class="workspace">
+    <section class="editing-pane" aria-label="内容编辑">
+      <div class="tabs" role="tablist"><button id="textTab" class="tab active" role="tab" aria-selected="true">▤ 文字</button><button id="layoutTab" class="tab" role="tab" aria-selected="false">▦ 布局</button></div>
+      <div id="textPanel" class="panel text-panel" role="tabpanel">
+        <div id="textToolbar" class="toolbar" role="toolbar" aria-label="文字格式">
+          <div class="tool-group"><button data-command="bold" title="加粗 Ctrl+B"><b>B</b></button><button data-command="italic" title="斜体 Ctrl+I"><i>I</i></button></div>
+          <div class="tool-group"><button data-block="h1" title="一级标题">H₁</button><button data-block="h2" title="二级标题">H₂</button><button data-block="h3" title="三级标题">H₃</button></div>
+          <div class="tool-group"><button data-command="insertUnorderedList" title="项目符号">☷</button><button data-command="insertOrderedList" title="编号列表">1.</button></div>
+          <div class="tool-group"><div class="palette-wrap"><button id="textColorBtn" class="palette-trigger" data-palette-trigger="foreColor" title="文字颜色" aria-expanded="false">A̲ <span class="color-caret">▾</span></button><div id="textColorPalette" class="color-palette" hidden><span class="palette-title">文字颜色</span><div class="swatches" data-palette="foreColor"></div><label class="custom-color">自定义 <input id="textColorCustom" type="color" value="#256449" aria-label="自定义文字颜色"></label></div></div><div class="palette-wrap"><button id="highlightBtn" class="palette-trigger" data-palette-trigger="hiliteColor" title="高亮颜色" aria-expanded="false">◩ <span class="color-caret">▾</span></button><div id="highlightPalette" class="color-palette" hidden><span class="palette-title">高亮颜色</span><div class="swatches" data-palette="hiliteColor"></div><label class="custom-color">自定义 <input id="highlightCustom" type="color" value="#fff2ad" aria-label="自定义高亮颜色"></label></div></div><button id="linkBtn" title="插入链接">↗</button><button id="codeBtn" title="行内代码">⌘</button><button id="tableBtn" title="插入表格">▦</button></div>
+          <div class="tool-group"><button id="columnBreakBtn" title="从下一栏开始">↦|</button></div>
+          <div class="tool-group"><button data-command="undo" title="撤销">↶</button><button data-command="redo" title="重做">↷</button></div>
+          <button id="sourceBtn" class="source-button" aria-pressed="false">&lt;/&gt; Markdown</button>
+        </div>
+        <div id="layoutPanel" class="layout-toolbar" role="toolbar" aria-label="排版设置" hidden>
+          <div class="setting"><div class="setting-top"><label>页面方向</label></div><div class="choice-row" role="group" aria-label="页面方向"><button data-orientation="landscape" aria-pressed="true">▭ 横向</button><button data-orientation="portrait" aria-pressed="false">▯ 纵向</button></div></div>
+          <div class="setting"><div class="setting-top"><label>栏数</label></div><div class="choice-row columns" role="group" aria-label="栏数"><button data-columns="auto" aria-pressed="true">自动</button><button data-columns="2" aria-pressed="false">2</button><button data-columns="3" aria-pressed="false">3</button><button data-columns="4" aria-pressed="false">4</button><button data-columns="5" aria-pressed="false">5</button><button data-columns="6" aria-pressed="false">6</button></div></div>
+          <div class="setting slider-setting"><div class="setting-top"><label for="fontSlider">字号</label><output id="fontValue">7.0 pt</output></div><input id="fontSlider" type="range" min="5" max="16" step="0.5" value="7"></div>
+          <div class="setting slider-setting"><div class="setting-top"><label for="marginSlider">页边距</label><output id="marginValue">0 mm</output></div><input id="marginSlider" type="range" min="0" max="20" step="1" value="0"></div>
+          <div class="setting slider-setting"><div class="setting-top"><label for="lineSlider">行距</label><output id="lineValue">1.60</output></div><input id="lineSlider" type="range" min="1" max="2" step="0.05" value="1.6"></div>
+        </div>
+        <div id="richEditor" class="rich-editor" contenteditable="true" role="textbox" aria-multiline="true" aria-label="可直接编辑的速查表内容" spellcheck="true"></div>
+        <textarea id="markdownEditor" class="markdown-editor" aria-label="Markdown 源码" spellcheck="false" hidden></textarea>
+        <div class="editor-foot"><span>可直接粘贴 Markdown；选中文字后使用上方按钮设置格式</span><span id="charCount">0 字</span></div>
+      </div>
+    </section>
+    <section class="preview-pane" aria-label="多栏排版预览">
+      <div class="preview-info"><span id="layoutSummary">A4 横向 · 4 栏 · 顺序填栏 · 1 页</span></div>
+      <div id="previewStage" class="preview-stage"><div id="pages" class="pages"></div></div>
+      <div class="zoom-controls" aria-label="预览缩放"><button id="zoomOut" title="缩小">−</button><output id="zoomValue">100%</output><button id="zoomIn" title="放大">＋</button></div>
+    </section>
+  </main>
+  <script src="editor.js"></script>
+</body>
+</html>

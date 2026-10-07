@@ -1,0 +1,7 @@
+*.html text eol=lf
+*.css text eol=lf
+*.js text eol=lf
+*.md text eol=lf
+*.py text eol=lf
+NOTICE text eol=lf
+.gitignore text eol=lf
