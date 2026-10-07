@@ -30,6 +30,3 @@
 - `LICENSE.md`：PolyForm Noncommercial 1.0.0 正式条款
 - `NOTICE`：需要随副本保留的署名
 
-## 来源说明
-
-本项目的需求与交互效果参考了 Hyperknow Cheatsheet 页面；本仓库不包含其网页资源，也不代表与 Hyperknow 有关联。
