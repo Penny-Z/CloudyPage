@@ -5,15 +5,48 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#f7f8fa">
+  <meta name="theme-color" content="#f7fbff">
   <meta name="description" content="CloudyPage 云中笺：粘贴 Markdown，直接编辑格式，实时生成多栏 Cheatsheet。">
   <title>CloudyPage 云中笺 · Cheatsheet 排版器</title>
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%232f6c50'/%3E%3Cpath d='M14 15h36v34H14z' fill='white'/%3E%3Cpath d='M26 16v32M38 16v32' stroke='%239fc4aa' stroke-width='2'/%3E%3C/svg%3E">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23426bd5'/%3E%3Cpath d='M18 43h28a10 10 0 0 0 0-20 15 15 0 0 0-29-2 11 11 0 0 0 1 22z' fill='white'/%3E%3C/svg%3E">
   <link rel="stylesheet" href="editor.css">
 </head>
 <body>
+  <div id="homeScreen" class="home-screen">
+    <header class="home-header">
+      <a class="home-brand" href="#home" aria-label="CloudyPage 云中笺首页"><span class="home-mark" aria-hidden="true">☁</span><span>CloudyPage <small>云中笺</small></span></a>
+      <nav class="home-nav" aria-label="首页导航"><a href="#features">产品特点</a><a href="#how-it-works">如何使用</a><a href="https://github.com/Penny-Z/CloudyPage" target="_blank" rel="noopener noreferrer">GitHub ↗</a></nav>
+      <a class="home-header-cta" href="#editor">立即使用 <span aria-hidden="true">↗</span></a>
+    </header>
+    <main id="homeMain">
+      <section class="home-hero" aria-labelledby="heroTitle">
+        <div class="hero-copy">
+          <div class="hero-eyebrow"><span class="eyebrow-dot"></span> 为知识留下一页轻盈的空间</div>
+          <h1 id="heroTitle">把零散的笔记，<br><em>整理成一页。</em></h1>
+          <p>粘贴 Markdown，像写笔记一样编辑。云中笺会把内容顺序排入多栏，让知识清晰、紧凑，也方便打印和随身查阅。</p>
+          <div class="hero-actions"><a class="hero-primary" href="#editor">立即使用 <span aria-hidden="true">→</span></a><a class="hero-secondary" href="#how-it-works">了解如何使用 <span aria-hidden="true">↓</span></a></div>
+          <div class="hero-notes"><span>无需注册</span><span>本地保存</span><span>可导出 PDF</span></div>
+        </div>
+        <div class="hero-visual" aria-label="CloudyPage 多栏速查表排版示意">
+          <div class="visual-glow"></div>
+          <div class="visual-window">
+            <div class="visual-window-top"><div class="visual-dots"><i></i><i></i><i></i></div><span>CloudyPage · 云中笺</span><span class="visual-window-action">导出 PDF ↓</span></div>
+            <div class="visual-window-body">
+              <div class="visual-side"><span class="visual-side-label">写下你的内容</span><div class="visual-side-title">期末复习速查</div><div class="visual-editor-line long"></div><div class="visual-editor-line"></div><div class="visual-editor-line medium"></div><div class="visual-editor-gap"></div><div class="visual-editor-line long"></div><div class="visual-editor-line medium"></div><div class="visual-editor-line"></div><div class="visual-editor-gap"></div><div class="visual-editor-line medium"></div><div class="visual-editor-line short"></div></div>
+              <div class="visual-sheet-wrap"><div class="visual-sheet"><div class="visual-sheet-head">期末复习速查 <span>A4 横向 · 4 栏</span></div><div class="visual-columns"><div><b>01 基本概念</b><i></i><i></i><i class="short"></i><strong>核心公式</strong><i></i><i></i><i class="short"></i><strong>重点回顾</strong><i></i><i></i></div><div><b>02 分析方法</b><i></i><i class="short"></i><i></i><strong>操作步骤</strong><i></i><i></i><i class="short"></i><i></i><strong>例题</strong><i></i></div><div><b>03 常见问题</b><i></i><i></i><i></i><strong>对照速记</strong><i></i><i class="short"></i><i></i><i></i></div><div><b>04 延伸阅读</b><i></i><i class="short"></i><i></i><strong>备注</strong><i></i><i></i><i class="short"></i><i></i></div></div></div></div>
+            </div>
+          </div>
+          <div class="visual-float">☁ <span>内容填满一栏，再流向下一栏</span></div>
+        </div>
+      </section>
+      <section id="features" class="home-section features-section" aria-labelledby="featuresTitle"><div class="section-intro"><span class="section-kicker">WHY CLOUDYPAGE</span><h2 id="featuresTitle">少一点调整，<br>多一点专注。</h2><p>从一段长笔记，到一张真正能用的速查表。</p></div><div class="feature-grid"><article class="feature-card"><span class="feature-icon">✎</span><span class="feature-number">01 / 编辑</span><h3>写起来顺手</h3><p>粘贴 Markdown 后继续直接编辑。标题、列表、文字颜色和高亮，都可以随手调整。</p></article><article class="feature-card"><span class="feature-icon">▤</span><span class="feature-number">02 / 排版</span><h3>多栏自然流动</h3><p>内容依次填满每一栏。横向、纵向、字号和栏数都可调整，边写边看预览。</p></article><article class="feature-card"><span class="feature-icon">↗</span><span class="feature-number">03 / 带走</span><h3>一页随时可查</h3><p>打印或保存 PDF，也能下载 Markdown。编辑内容自动保存在当前浏览器。</p></article></div></section>
+      <section id="how-it-works" class="home-section start-section" aria-labelledby="startTitle"><div><span class="section-kicker">GET STARTED</span><h2 id="startTitle">打开，粘贴，<br>排成你的云中笺。</h2><p>无需注册，也无需上传笔记。现在就用一段内容试试。</p></div><a class="start-cta" href="#editor">开始排版 <span aria-hidden="true">→</span></a></section>
+    </main>
+    <footer class="home-footer"><span>© 2026 Penny-Z · CloudyPage 云中笺</span><span>源码公开 · <a href="https://github.com/Penny-Z/CloudyPage/blob/main/LICENSE.md" target="_blank" rel="noopener noreferrer">非商业许可</a></span></footer>
+  </div>
+  <div id="appScreen" class="app-screen" hidden>
   <header class="topbar">
-    <div class="brand"><span class="brand-icon">▥</span><strong>CloudyPage <span>云中笺</span></strong><span class="mode-label">Cheatsheet 排版器</span><span class="save-status" id="saveStatus">● 已自动保存</span></div>
+    <div class="brand"><a class="editor-home-link" href="#home" title="返回首页" aria-label="返回 CloudyPage 首页"><span class="brand-icon">☁</span><strong>CloudyPage <span>云中笺</span></strong></a><span class="mode-label">Cheatsheet 排版器</span><span class="save-status" id="saveStatus">● 已自动保存</span></div>
     <div class="top-actions"><button id="exampleBtn" class="quiet" title="载入示例">示例</button><button id="downloadMdBtn" class="quiet" title="下载 Markdown">下载 .md</button><button id="printBtn" class="primary">↓ 打印 / PDF</button></div>
   </header>
   <main class="workspace">
@@ -47,6 +80,7 @@
       <div class="zoom-controls" aria-label="预览缩放"><button id="zoomOut" title="缩小">−</button><output id="zoomValue">100%</output><button id="zoomIn" title="放大">＋</button></div>
     </section>
   </main>
+  </div>
   <script src="editor.js"></script>
 </body>
 </html>

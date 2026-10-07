@@ -5,10 +5,10 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#f7f8fa">
+  <meta name="theme-color" content="#f7fbff">
   <meta name="description" content="CloudyPage 云中笺：粘贴 Markdown，直接编辑格式，实时生成多栏 Cheatsheet。">
   <title>CloudyPage 云中笺 · Cheatsheet 排版器</title>
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%232f6c50'/%3E%3Cpath d='M14 15h36v34H14z' fill='white'/%3E%3Cpath d='M26 16v32M38 16v32' stroke='%239fc4aa' stroke-width='2'/%3E%3C/svg%3E">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23426bd5'/%3E%3Cpath d='M18 43h28a10 10 0 0 0 0-20 15 15 0 0 0-29-2 11 11 0 0 0 1 22z' fill='white'/%3E%3C/svg%3E">
   <style>
 /* Required Notice: Copyright 2026 Penny-Z. */
 /* Required Notice: Licensed under the PolyForm Noncommercial License 1.0.0: https://polyformproject.org/licenses/noncommercial/1.0.0 */
@@ -16,9 +16,59 @@
 * { box-sizing:border-box; }
 html,body { height:100%; margin:0; }
 body { background:#f6f7f9; color:var(--ink); font-family:Arial,"Microsoft YaHei","Noto Sans CJK SC",sans-serif; }
+body.editor-open { overflow:hidden; }
 button,textarea,input { font:inherit; }
 button { cursor:pointer; }
 [hidden] { display:none!important; }
+.app-screen { height:100%; }
+.editor-home-link { display:flex; align-items:center; gap:8px; color:inherit; text-decoration:none; }
+.editor-home-link:hover strong { color:#3865b8; }
+.home-screen { min-height:100vh; overflow:hidden; background:#f9fbff; color:#14233a; }
+.home-screen a { color:inherit; text-decoration:none; }
+.home-header { height:76px; max-width:1480px; margin:auto; padding:0 clamp(24px,4.5vw,72px); display:flex; align-items:center; gap:30px; border-bottom:1px solid #e9eef5; }
+.home-brand { display:flex; align-items:center; gap:10px; flex:none; font-size:20px; font-weight:800; letter-spacing:-.045em; }
+.home-brand small { margin-left:2px; color:#6a7890; font-size:13px; font-weight:500; letter-spacing:0; }
+.home-mark { display:grid; place-items:center; width:35px; height:35px; border-radius:12px; color:#fff; background:linear-gradient(135deg,#315fb9,#83b8eb); font-size:23px; box-shadow:0 7px 16px #4d83c238; }
+.home-nav { display:flex; align-items:center; justify-content:center; gap:32px; flex:1; color:#58677c; font-size:13px; font-weight:600; }
+.home-nav a:hover,.home-footer a:hover { color:#315fb9; }
+.home-header-cta { display:inline-flex; align-items:center; gap:16px; padding:11px 17px; border:1px solid #cbdcf2; border-radius:10px; color:#2854a3!important; background:#eff5ff; font-size:13px; font-weight:700; }
+.home-header-cta:hover { background:#e2edff; }
+.home-hero { max-width:1480px; min-height:650px; margin:auto; padding:74px clamp(24px,4.5vw,72px) 86px; display:grid; grid-template-columns:minmax(390px,.91fr) minmax(500px,1.09fr); align-items:center; gap:35px; }
+.hero-copy { position:relative; z-index:2; padding-bottom:4px; }
+.hero-eyebrow,.section-kicker { display:inline-flex; align-items:center; gap:9px; color:#436ac4; font-size:12px; font-weight:800; letter-spacing:.08em; }
+.eyebrow-dot { width:7px; height:7px; border-radius:50%; background:#74b2e9; box-shadow:0 0 0 5px #e6f1ff; }
+.hero-copy h1 { margin:22px 0 21px; color:#122037; font-size:clamp(46px,5vw,77px); line-height:1.15; letter-spacing:-.075em; font-weight:850; }
+.hero-copy h1 em { font-style:normal; color:#426ed0; }
+.hero-copy p { max-width:555px; margin:0; color:#58677c; font-size:17px; line-height:1.9; }
+.hero-actions { display:flex; align-items:center; gap:12px; margin-top:34px; }
+.hero-primary,.hero-secondary { display:inline-flex; align-items:center; justify-content:center; gap:26px; min-height:50px; padding:0 22px; border-radius:11px; font-size:14px; font-weight:700; transition:transform .2s,box-shadow .2s; }
+.hero-primary { color:#fff!important; background:#426bd5; box-shadow:0 10px 22px #4777d23b; }
+.hero-secondary { border:1px solid #d5dfe9; background:#fff; color:#33475f!important; }
+.hero-primary:hover,.hero-secondary:hover { transform:translateY(-2px); box-shadow:0 12px 22px #4777d22b; }
+.hero-notes { display:flex; gap:12px; flex-wrap:wrap; margin-top:24px; color:#78889b; font-size:12px; }
+.hero-notes span+span:before { content:'·'; margin-right:12px; color:#a9bacf; }
+.hero-visual { position:relative; min-width:0; padding:23px 4px 44px; }
+.visual-glow { position:absolute; inset:2% -8% -3%; border-radius:45%; background:radial-gradient(circle at 55% 48%,#dceaff 0,#ecf5ff 47%,transparent 72%); filter:blur(22px); }
+.visual-window { position:relative; overflow:hidden; border:1px solid #dbe4ee; border-radius:18px; background:#fff; box-shadow:0 22px 70px #34598e24,0 2px 10px #34598e0a; transform:rotate(-1deg); }
+.visual-window-top { height:45px; display:flex; align-items:center; justify-content:space-between; gap:10px; padding:0 16px; border-bottom:1px solid #e8edf4; color:#536782; font-size:10px; font-weight:700; }
+.visual-dots { display:flex; gap:5px; }.visual-dots i { width:6px; height:6px; border-radius:50%; background:#c5d3e6; }.visual-dots i:first-child { background:#8bb8e8; }
+.visual-window-action { padding:5px 8px; border-radius:5px; color:#fff; background:#426bd5; }
+.visual-window-body { height:355px; display:grid; grid-template-columns:30% 70%; }
+.visual-side { padding:23px 16px; border-right:1px solid #ebeff5; background:#fbfcfe; }
+.visual-side-label { display:block; margin-bottom:18px; color:#8090a6; font-size:10px; }.visual-side-title { margin-bottom:18px; font-size:13px; font-weight:800; }
+.visual-editor-line { width:76%; height:5px; margin:11px 0; border-radius:4px; background:#d8e1ee; }.visual-editor-line.long { width:95%; }.visual-editor-line.medium { width:65%; }.visual-editor-line.short { width:43%; }.visual-editor-gap { height:14px; }
+.visual-sheet-wrap { display:grid; place-items:center; padding:24px 17px; background:#edf3f9; }
+.visual-sheet { width:100%; max-width:445px; aspect-ratio:1.44; padding:17px 15px; background:#fff; box-shadow:0 4px 18px #7087a42e; }
+.visual-sheet-head { display:flex; justify-content:space-between; margin-bottom:11px; color:#253751; font-size:8px; font-weight:800; }.visual-sheet-head span { color:#92a0b1; font-size:7px; font-weight:500; }
+.visual-columns { height:calc(100% - 20px); display:grid; grid-template-columns:repeat(4,1fr); gap:6px; }.visual-columns>div { padding-right:5px; border-right:1px solid #e4ebf3; }.visual-columns>div:last-child { border:0; }.visual-columns b,.visual-columns strong { display:block; margin:2px 0 6px; color:#2a496f; font-size:7px; line-height:1.2; }.visual-columns strong { margin-top:10px; color:#56739d; font-size:6px; }.visual-columns i { display:block; width:95%; height:3px; margin:6px 0; border-radius:3px; background:#cbd8e7; }.visual-columns i:nth-of-type(2n) { width:77%; }.visual-columns i.short { width:49%; }
+.visual-float { position:absolute; right:-12px; bottom:14px; display:flex; align-items:center; gap:8px; padding:12px 15px; border:1px solid #d8e9f6; border-radius:11px; background:#fff; color:#4270ae; box-shadow:0 12px 26px #42648c20; font-size:11px; font-weight:700; }.visual-float:first-letter { font-size:17px; }
+.home-section { max-width:1480px; margin:auto; padding:92px clamp(24px,4.5vw,72px); }
+.features-section { border-top:1px solid #e8eef6; }.section-intro { margin-bottom:35px; }.section-intro h2,.start-section h2 { margin:14px 0; color:#172b44; font-size:clamp(34px,3.3vw,48px); line-height:1.25; letter-spacing:-.05em; }.section-intro p,.start-section p { margin:0; color:#697b91; font-size:15px; line-height:1.8; }
+.feature-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:17px; }.feature-card { min-height:229px; padding:25px 26px; border:1px solid #e1e9f3; border-radius:15px; background:#fff; box-shadow:0 8px 28px #5076a00b; }.feature-icon { display:grid; place-items:center; width:38px; height:38px; border-radius:11px; background:#edf4ff; color:#426bcb; font-size:21px; }.feature-number { display:block; margin-top:22px; color:#7c9ac7; font-size:10px; font-weight:800; letter-spacing:.08em; }.feature-card h3 { margin:8px 0; color:#20364e; font-size:19px; }.feature-card p { margin:0; color:#6d7b8c; font-size:13px; line-height:1.75; }
+.start-section { display:flex; align-items:end; justify-content:space-between; gap:30px; margin-bottom:55px; border-radius:22px; background:#edf5ff; }.start-cta { display:inline-flex; align-items:center; justify-content:space-between; gap:35px; min-width:156px; padding:15px 18px; border-radius:10px; background:#426bd5; color:#fff!important; font-size:14px; font-weight:700; }.start-cta:hover { background:#3057b4; }
+.home-footer { max-width:1480px; min-height:72px; margin:auto; padding:22px clamp(24px,4.5vw,72px); display:flex; justify-content:space-between; gap:20px; border-top:1px solid #e7edf5; color:#8a98aa; font-size:12px; }
+@media(max-width:1000px) { .home-hero { grid-template-columns:1fr; padding-top:70px; }.hero-copy { max-width:690px; }.hero-visual { width:min(100%,720px); margin:auto; }.home-hero { gap:7px; }.feature-grid { gap:10px; } }
+@media(max-width:650px) { .home-header { height:65px; padding:0 20px; }.home-nav { display:none; }.home-header-cta { margin-left:auto; padding:9px 11px; gap:7px; }.home-brand { font-size:17px; }.home-brand small { font-size:11px; }.home-mark { width:29px; height:29px; font-size:19px; }.home-hero { min-height:0; padding:64px 23px 55px; display:block; }.hero-copy h1 { font-size:clamp(42px,10vw,60px); }.hero-copy p { font-size:15px; }.hero-actions { flex-wrap:wrap; }.hero-visual { margin-top:44px; padding-bottom:28px; }.visual-window-body { height:250px; }.visual-side { padding:17px 10px; }.visual-sheet-wrap { padding:13px 8px; }.visual-sheet { padding:10px 8px; }.visual-float { right:0; bottom:0; }.home-section { padding:65px 23px; }.feature-grid { grid-template-columns:1fr; }.feature-card { min-height:0; }.start-section { margin:0 14px 30px; padding:38px 22px; display:block; }.start-cta { margin-top:25px; }.home-footer { padding:23px; flex-direction:column; gap:6px; } }
 .topbar { height:57px; display:flex; align-items:center; justify-content:space-between; padding:0 19px; border-bottom:1px solid var(--border); background:#fff; gap:12px; }
 .brand,.top-actions { display:flex; align-items:center; gap:12px; white-space:nowrap; }
 .brand-icon { color:#2f7451; font-size:24px; line-height:1; }
@@ -81,14 +131,47 @@ button { cursor:pointer; }
 .sheet-flow [data-column-break] { display:block; height:0; margin:0; break-before:column; }
 .rich-editor [data-column-break] { height:1.5em; margin:.5em 0; border-top:1px dashed #9fb7a7; position:relative; }.rich-editor [data-column-break]:after { content:"从下一栏开始"; position:absolute; top:-.68em; left:40%; padding:0 7px; color:#799485; background:#fff; font-size:10px; }
 .zoom-controls { position:absolute; top:44px; right:27px; display:flex; align-items:center; gap:2px; padding:3px; background:rgba(255,255,255,.96); border:1px solid #e0e4e6; border-radius:9px; box-shadow:0 1px 8px #ccd3d5; z-index:3; }.zoom-controls button { border:0; background:transparent; width:29px; height:29px; font-size:18px; color:#58636a; }.zoom-controls button:hover { background:#f0f4f1; border-radius:5px; }.zoom-controls output { width:45px; text-align:center; font-size:12px; color:#69747a; }
-@media(max-width:800px) { .workspace { display:flex; flex-direction:column; height:auto; min-height:calc(100vh - 57px); }.editing-pane { height:51vh; min-height:370px; border-right:0; border-bottom:1px solid #d7dce0; }.preview-pane { min-height:65vh; }.preview-stage { max-height:72vh; }.topbar { padding:0 10px; }.brand { gap:6px; }.brand strong { font-size:13px; }.mode-label,.save-status,.top-actions .quiet { display:none; }.top-actions button { padding:7px 9px; }.toolbar { gap:3px; }.tool-group button { min-width:25px; } }
-@media print { @page { size:A4 landscape; margin:0; } html,body { width:auto!important; height:auto!important; background:#fff!important; }.topbar,.editing-pane,.preview-info,.zoom-controls { display:none!important; }.workspace,.preview-pane,.preview-stage,.pages { display:block!important; width:auto!important; height:auto!important; min-height:0!important; padding:0!important; margin:0!important; overflow:visible!important; background:#fff!important; }.page-shell { width:var(--paper-w)!important; height:var(--paper-h)!important; margin:0!important; break-after:page; page-break-after:always; }.page-shell:last-child { break-after:auto; page-break-after:auto; }.page { position:static!important; transform:none!important; width:var(--paper-w)!important; height:var(--paper-h)!important; box-shadow:none!important; } }
+@media(max-width:800px) { body.editor-open { overflow:auto; }.app-screen { height:auto; }.workspace { display:flex; flex-direction:column; height:auto; min-height:calc(100vh - 57px); }.editing-pane { height:51vh; min-height:370px; border-right:0; border-bottom:1px solid #d7dce0; }.preview-pane { min-height:65vh; }.preview-stage { max-height:72vh; }.topbar { padding:0 10px; }.brand { gap:6px; }.brand strong { font-size:13px; }.mode-label,.save-status,.top-actions .quiet { display:none; }.top-actions button { padding:7px 9px; }.toolbar { gap:3px; }.tool-group button { min-width:25px; } }
+@media print { @page { size:A4 landscape; margin:0; } html,body { width:auto!important; height:auto!important; background:#fff!important; overflow:visible!important; }.home-screen,.topbar,.editing-pane,.preview-info,.zoom-controls { display:none!important; }.app-screen,.workspace,.preview-pane,.preview-stage,.pages { display:block!important; width:auto!important; height:auto!important; min-height:0!important; padding:0!important; margin:0!important; overflow:visible!important; background:#fff!important; }.page-shell { width:var(--paper-w)!important; height:var(--paper-h)!important; margin:0!important; break-after:page; page-break-after:always; }.page-shell:last-child { break-after:auto; page-break-after:auto; }.page { position:static!important; transform:none!important; width:var(--paper-w)!important; height:var(--paper-h)!important; box-shadow:none!important; } }
 
 </style>
 </head>
 <body>
+  <div id="homeScreen" class="home-screen">
+    <header class="home-header">
+      <a class="home-brand" href="#home" aria-label="CloudyPage 云中笺首页"><span class="home-mark" aria-hidden="true">☁</span><span>CloudyPage <small>云中笺</small></span></a>
+      <nav class="home-nav" aria-label="首页导航"><a href="#features">产品特点</a><a href="#how-it-works">如何使用</a><a href="https://github.com/Penny-Z/CloudyPage" target="_blank" rel="noopener noreferrer">GitHub ↗</a></nav>
+      <a class="home-header-cta" href="#editor">立即使用 <span aria-hidden="true">↗</span></a>
+    </header>
+    <main id="homeMain">
+      <section class="home-hero" aria-labelledby="heroTitle">
+        <div class="hero-copy">
+          <div class="hero-eyebrow"><span class="eyebrow-dot"></span> 为知识留下一页轻盈的空间</div>
+          <h1 id="heroTitle">把零散的笔记，<br><em>整理成一页。</em></h1>
+          <p>粘贴 Markdown，像写笔记一样编辑。云中笺会把内容顺序排入多栏，让知识清晰、紧凑，也方便打印和随身查阅。</p>
+          <div class="hero-actions"><a class="hero-primary" href="#editor">立即使用 <span aria-hidden="true">→</span></a><a class="hero-secondary" href="#how-it-works">了解如何使用 <span aria-hidden="true">↓</span></a></div>
+          <div class="hero-notes"><span>无需注册</span><span>本地保存</span><span>可导出 PDF</span></div>
+        </div>
+        <div class="hero-visual" aria-label="CloudyPage 多栏速查表排版示意">
+          <div class="visual-glow"></div>
+          <div class="visual-window">
+            <div class="visual-window-top"><div class="visual-dots"><i></i><i></i><i></i></div><span>CloudyPage · 云中笺</span><span class="visual-window-action">导出 PDF ↓</span></div>
+            <div class="visual-window-body">
+              <div class="visual-side"><span class="visual-side-label">写下你的内容</span><div class="visual-side-title">期末复习速查</div><div class="visual-editor-line long"></div><div class="visual-editor-line"></div><div class="visual-editor-line medium"></div><div class="visual-editor-gap"></div><div class="visual-editor-line long"></div><div class="visual-editor-line medium"></div><div class="visual-editor-line"></div><div class="visual-editor-gap"></div><div class="visual-editor-line medium"></div><div class="visual-editor-line short"></div></div>
+              <div class="visual-sheet-wrap"><div class="visual-sheet"><div class="visual-sheet-head">期末复习速查 <span>A4 横向 · 4 栏</span></div><div class="visual-columns"><div><b>01 基本概念</b><i></i><i></i><i class="short"></i><strong>核心公式</strong><i></i><i></i><i class="short"></i><strong>重点回顾</strong><i></i><i></i></div><div><b>02 分析方法</b><i></i><i class="short"></i><i></i><strong>操作步骤</strong><i></i><i></i><i class="short"></i><i></i><strong>例题</strong><i></i></div><div><b>03 常见问题</b><i></i><i></i><i></i><strong>对照速记</strong><i></i><i class="short"></i><i></i><i></i></div><div><b>04 延伸阅读</b><i></i><i class="short"></i><i></i><strong>备注</strong><i></i><i></i><i class="short"></i><i></i></div></div></div></div>
+            </div>
+          </div>
+          <div class="visual-float">☁ <span>内容填满一栏，再流向下一栏</span></div>
+        </div>
+      </section>
+      <section id="features" class="home-section features-section" aria-labelledby="featuresTitle"><div class="section-intro"><span class="section-kicker">WHY CLOUDYPAGE</span><h2 id="featuresTitle">少一点调整，<br>多一点专注。</h2><p>从一段长笔记，到一张真正能用的速查表。</p></div><div class="feature-grid"><article class="feature-card"><span class="feature-icon">✎</span><span class="feature-number">01 / 编辑</span><h3>写起来顺手</h3><p>粘贴 Markdown 后继续直接编辑。标题、列表、文字颜色和高亮，都可以随手调整。</p></article><article class="feature-card"><span class="feature-icon">▤</span><span class="feature-number">02 / 排版</span><h3>多栏自然流动</h3><p>内容依次填满每一栏。横向、纵向、字号和栏数都可调整，边写边看预览。</p></article><article class="feature-card"><span class="feature-icon">↗</span><span class="feature-number">03 / 带走</span><h3>一页随时可查</h3><p>打印或保存 PDF，也能下载 Markdown。编辑内容自动保存在当前浏览器。</p></article></div></section>
+      <section id="how-it-works" class="home-section start-section" aria-labelledby="startTitle"><div><span class="section-kicker">GET STARTED</span><h2 id="startTitle">打开，粘贴，<br>排成你的云中笺。</h2><p>无需注册，也无需上传笔记。现在就用一段内容试试。</p></div><a class="start-cta" href="#editor">开始排版 <span aria-hidden="true">→</span></a></section>
+    </main>
+    <footer class="home-footer"><span>© 2026 Penny-Z · CloudyPage 云中笺</span><span>源码公开 · <a href="https://github.com/Penny-Z/CloudyPage/blob/main/LICENSE.md" target="_blank" rel="noopener noreferrer">非商业许可</a></span></footer>
+  </div>
+  <div id="appScreen" class="app-screen" hidden>
   <header class="topbar">
-    <div class="brand"><span class="brand-icon">▥</span><strong>CloudyPage <span>云中笺</span></strong><span class="mode-label">Cheatsheet 排版器</span><span class="save-status" id="saveStatus">● 已自动保存</span></div>
+    <div class="brand"><a class="editor-home-link" href="#home" title="返回首页" aria-label="返回 CloudyPage 首页"><span class="brand-icon">☁</span><strong>CloudyPage <span>云中笺</span></strong></a><span class="mode-label">Cheatsheet 排版器</span><span class="save-status" id="saveStatus">● 已自动保存</span></div>
     <div class="top-actions"><button id="exampleBtn" class="quiet" title="载入示例">示例</button><button id="downloadMdBtn" class="quiet" title="下载 Markdown">下载 .md</button><button id="printBtn" class="primary">↓ 打印 / PDF</button></div>
   </header>
   <main class="workspace">
@@ -122,12 +205,26 @@ button { cursor:pointer; }
       <div class="zoom-controls" aria-label="预览缩放"><button id="zoomOut" title="缩小">−</button><output id="zoomValue">100%</output><button id="zoomIn" title="放大">＋</button></div>
     </section>
   </main>
+  </div>
   <script>
 /* Required Notice: Copyright 2026 Penny-Z. */
 /* Required Notice: Licensed under the PolyForm Noncommercial License 1.0.0: https://polyformproject.org/licenses/noncommercial/1.0.0 */
 (() => {
   const $ = id => document.getElementById(id);
   const rich = $('richEditor'), source = $('markdownEditor'), pages = $('pages'), stage = $('previewStage');
+  let currentScreen = null;
+  function syncScreen() {
+    const nextScreen = location.hash === '#editor' ? 'editor' : 'home';
+    if (nextScreen === currentScreen) return;
+    currentScreen = nextScreen;
+    $('homeScreen').hidden = nextScreen === 'editor';
+    $('appScreen').hidden = nextScreen !== 'editor';
+    document.body.classList.toggle('editor-open', nextScreen === 'editor');
+    document.title = nextScreen === 'editor' ? 'CloudyPage 云中笺 · 排版器' : 'CloudyPage 云中笺 · 把笔记整理成一页';
+    window.scrollTo(0, 0);
+    if (nextScreen === 'editor') requestAnimationFrame(render);
+  }
+  window.addEventListener('hashchange', syncScreen);
   const key = 'zhijian-cheatsheet-v2';
   const oldKey = 'zhijian-cheatsheet-v1';
   const state = { orientation:'landscape', columns:'auto', font:7, margin:0, line:1.6, zoom:1, sourceMode:false };
@@ -503,7 +600,7 @@ button { cursor:pointer; }
     state.orientation=stored?.orientation==='portrait'?'portrait':'landscape';
     state.columns=stored?.columns||'auto'; state.font=stored?.font??7; state.margin=stored?.margin??0; state.line=stored?.line??1.6;
   } catch { rich.innerHTML=markdownToHtml(exampleMarkdown); showingExample=true; }
-  syncControls(); render();
+  syncControls(); syncScreen();
   if (document.fonts?.ready) document.fonts.ready.then(render);
 })();
 
