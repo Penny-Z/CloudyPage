@@ -718,15 +718,19 @@
     const latex=$('formulaInput').value.trim();
     if (!latex) { $('formulaInput').focus(); return; }
     const html=formulaHtml(latex,$('formulaDisplay').checked);
+    $('formulaDialog').close();
     if (formulaTarget?.isConnected) formulaTarget.outerHTML=html;
     else {
       rich.focus();
       if (formulaRange && rich.contains(formulaRange.commonAncestorContainer)) {
         const selection=window.getSelection(); selection.removeAllRanges(); selection.addRange(formulaRange);
+      } else {
+        const range=document.createRange(); range.selectNodeContents(rich); range.collapse(false);
+        const selection=window.getSelection(); selection.removeAllRanges(); selection.addRange(range);
       }
       document.execCommand('insertHTML',false,html);
     }
-    $('formulaDialog').close(); showingExample=false; schedule();
+    showingExample=false; schedule();
   });
   rich.addEventListener('dblclick',event=>{
     const formula=event.target.closest('[data-latex]');
