@@ -110,6 +110,13 @@
           <div class="setting slider-setting"><div class="setting-top"><label for="marginSlider">页边距</label><output id="marginValue">0 mm</output></div><input id="marginSlider" type="range" min="0" max="20" step="1" value="0"></div>
           <div class="setting slider-setting"><div class="setting-top"><label for="lineSlider">行距</label><output id="lineValue">1.60</output></div><input id="lineSlider" type="range" min="1" max="2" step="0.05" value="1.6"></div>
         </div>
+        <div id="tableWidthBar" class="table-width-bar" hidden>
+          <label for="tableWidthSlider">第 <span id="tableColumnNumber">1</span> 列宽度</label>
+          <input id="tableWidthSlider" type="range" min="8" max="92" step="1" value="50">
+          <output id="tableWidthValue">50%</output>
+          <button id="tableWidthReset" type="button">等宽</button>
+          <span>点击表格单元格后调整</span>
+        </div>
         <div id="richEditor" class="rich-editor" contenteditable="true" role="textbox" aria-multiline="true" aria-label="可直接编辑的速查表内容" spellcheck="true"></div>
         <textarea id="markdownEditor" class="markdown-editor" aria-label="Markdown 源码" spellcheck="false" hidden></textarea>
         <div class="editor-foot"><span>可粘贴 Markdown；草稿箱中可随时载入内置示例</span><span id="charCount">0 字</span></div>

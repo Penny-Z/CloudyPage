@@ -358,15 +358,17 @@
 - [ ] 报告不确定性与局限性
 - [ ] 图表标明单位、分母与样本量
 - [ ] 记录数据、代码与模型版本`;
-  let renderFrame = 0, saveTimer = 0, sourceDirty = false, showingExample = false, colorRange = null;
+  let renderFrame = 0, saveTimer = 0, sourceDirty = false, showingExample = false, colorRange = null, activeFormula = null, activeTable = null, activeColumn = 0;
 
   const escapeHtml = text => String(text).replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
   const safeColor = value => /^(?:#[0-9a-f]{3,8}|rgba?\([\d\s.,%]+\))$/i.test(String(value).trim()) ? String(value).trim() : '';
-  function formulaHtml(latex, displayMode=false) {
+  const styleString = (color,background) => `${safeColor(color)?`color:${safeColor(color)};`:''}${safeColor(background)?`background-color:${safeColor(background)};`:''}`;
+  function formulaHtml(latex, displayMode=false, color='', background='') {
     const expression=String(latex).trim();
     const tag=displayMode?'div':'span', kind=displayMode?'math-block':'math-inline';
     const rendered=window.katex?.renderToString(expression,{displayMode,throwOnError:false,trust:false,strict:'ignore'})||escapeHtml(expression);
-    return `<${tag} class="${kind}" data-latex="${escapeHtml(expression)}" contenteditable="false" title="双击修改公式">${rendered}</${tag}>`;
+    const style=styleString(color,background);
+    return `<${tag} class="${kind}" data-latex="${escapeHtml(expression)}" contenteditable="false" tabindex="0" ${style?`style="${style}"`:''} title="单击选中以设置颜色，双击修改公式">${rendered}</${tag}>`;
   }
   function inline(text) {
     const colorTags=[]; let depth=0;
@@ -398,14 +400,20 @@
       const line = lines[i];
       if (!line.trim()) { i++; continue; }
       if (/^\s*<!--\s*column-break\s*-->\s*$/.test(line)) { result.push('<div data-column-break contenteditable="false"></div>'); i++; continue; }
+      const formulaStyle=line.match(/^\s*<!--\s*cloudypage-formula-style:\s*(.*?)\s*-->\s*$/);
+      if (formulaStyle && i+1<lines.length && /^\s*\$\$/.test(lines[i+1])) { i++; continue; }
+      const blockStyle=lines[i-1]?.match(/^\s*<!--\s*cloudypage-formula-style:\s*(.*?)\s*-->\s*$/)?.[1]||'';
+      const blockColor=safeColor(blockStyle.match(/(?:^|;)\s*color\s*:\s*([^;]+)/i)?.[1]||'');
+      const blockBackground=safeColor(blockStyle.match(/(?:^|;)\s*background-color\s*:\s*([^;]+)/i)?.[1]||'');
       if (/^\s*\$\$\s*$/.test(line)) {
         const expression=[]; i++;
         while (i < lines.length && !/^\s*\$\$\s*$/.test(lines[i])) expression.push(lines[i++]);
         if (i < lines.length) i++;
-        result.push(formulaHtml(expression.join('\n'),true)); continue;
+        result.push(formulaHtml(expression.join('\n'),true,blockColor,blockBackground)); continue;
       }
       const displayFormula=line.match(/^\s*\$\$(.+)\$\$\s*$/);
-      if (displayFormula) { result.push(formulaHtml(displayFormula[1],true)); i++; continue; }
+      if (displayFormula) { result.push(formulaHtml(displayFormula[1],true,blockColor,blockBackground)); i++; continue; }
+      if (/^\s*<!--\s*cloudypage-table-widths:\s*([\d.,\s]+)\s*-->\s*$/.test(line) && i+2<lines.length && tableRule(lines[i+2])) { i++; continue; }
       if (/^\s*```/.test(line)) {
         const code = []; i++;
         while (i < lines.length && !/^\s*```/.test(lines[i])) code.push(lines[i++]);
@@ -418,7 +426,9 @@
       if (i + 1 < lines.length && line.includes('|') && tableRule(lines[i + 1])) {
         const header = cells(line); i += 2; const rows = [];
         while (i < lines.length && lines[i].trim() && lines[i].includes('|')) rows.push(cells(lines[i++]));
-        result.push(`<table><thead><tr>${header.map(value => `<th>${inline(value)}</th>`).join('')}</tr></thead><tbody>${rows.map(row => `<tr>${header.map((_, j) => `<td>${inline(row[j] || '')}</td>`).join('')}</tr>`).join('')}</tbody></table>`); continue;
+        const widths=lines[i-rows.length-3]?.match(/^\s*<!--\s*cloudypage-table-widths:\s*([\d.,\s]+)\s*-->\s*$/)?.[1]?.split(',').map(Number);
+        const colgroup=widths?.length===header.length && widths.every(value=>Number.isFinite(value)&&value>=5&&value<=95) ? `<colgroup>${widths.map(value=>`<col style="width:${value}%">`).join('')}</colgroup>` : '';
+        result.push(`<table>${colgroup}<thead><tr>${header.map(value => `<th>${inline(value)}</th>`).join('')}</tr></thead><tbody>${rows.map(row => `<tr>${header.map((_, j) => `<td>${inline(row[j] || '')}</td>`).join('')}</tr>`).join('')}</tbody></table>`); continue;
       }
       if (/^\s*>/.test(line)) {
         const quote = [];
@@ -445,7 +455,11 @@
   function inlineToMarkdown(node) {
     if (node.nodeType === Node.TEXT_NODE) return node.textContent;
     if (node.nodeType !== Node.ELEMENT_NODE) return '';
-    if (node.hasAttribute('data-latex')) return `$${node.getAttribute('data-latex')}$`;
+    if (node.hasAttribute('data-latex')) {
+      const formula=`$${node.getAttribute('data-latex')}$`;
+      const style=styleString(node.style.color,node.style.backgroundColor);
+      return style?`<span style="${style}">${formula}</span>`:formula;
+    }
     const tag = node.tagName.toLowerCase();
     const inner = [...node.childNodes].map(inlineToMarkdown).join('');
     if (tag === 'br') return '\n';
@@ -467,13 +481,20 @@
       if (node.nodeType === Node.TEXT_NODE) { if (node.textContent.trim()) output.push(node.textContent.trim()); continue; }
       if (node.nodeType !== Node.ELEMENT_NODE) continue;
       const tag = node.tagName.toLowerCase();
-      if (node.classList.contains('math-block') && node.hasAttribute('data-latex')) { output.push(`$$\n${node.getAttribute('data-latex')}\n$$`); continue; }
+      if (node.classList.contains('math-block') && node.hasAttribute('data-latex')) {
+        const style=styleString(node.style.color,node.style.backgroundColor);
+        output.push(`${style?`<!-- cloudypage-formula-style: ${style} -->\n`:''}$$\n${node.getAttribute('data-latex')}\n$$`); continue;
+      }
       if (node.hasAttribute('data-column-break')) { output.push('<!-- column-break -->'); continue; }
       if (/^h[1-6]$/.test(tag)) output.push(`${'#'.repeat(Number(tag[1]))} ${inlineToMarkdown(node)}`);
       else if (tag === 'ul' || tag === 'ol') output.push([...node.children].filter(child => child.tagName === 'LI').map((child,index) => `${tag === 'ol' ? `${index+1}.` : '-'} ${inlineToMarkdown(child)}`).join('\n'));
       else if (tag === 'table') {
         const rows = [...node.querySelectorAll('tr')].map(row => [...row.children].map(cell => inlineToMarkdown(cell).replace(/\|/g,'\\|')));
-        if (rows.length) output.push(`| ${rows[0].join(' | ')} |\n| ${rows[0].map(()=>'---').join(' | ')} |${rows.slice(1).map(row=>`\n| ${row.join(' | ')} |`).join('')}`);
+        if (rows.length) {
+          const widths=[...node.querySelectorAll(':scope > colgroup > col')].map(col=>parseFloat(col.style.width));
+          const marker=widths.length===rows[0].length && widths.every(Number.isFinite)?`<!-- cloudypage-table-widths: ${widths.join(',')} -->\n`:'';
+          output.push(`${marker}| ${rows[0].join(' | ')} |\n| ${rows[0].map(()=>'---').join(' | ')} |${rows.slice(1).map(row=>`\n| ${row.join(' | ')} |`).join('')}`);
+        }
       }
       else if (tag === 'blockquote') output.push(inlineToMarkdown(node).split('\n').map(line=>`> ${line}`).join('\n'));
       else if (tag === 'pre') output.push(`\`\`\`\n${node.textContent}\n\`\`\``);
@@ -488,6 +509,7 @@
     $('textTab').classList.toggle('active', !layout); $('layoutTab').classList.toggle('active', layout);
     $('textTab').setAttribute('aria-selected', String(!layout)); $('layoutTab').setAttribute('aria-selected', String(layout));
     $('textToolbar').hidden = layout; $('layoutPanel').hidden = !layout;
+    $('tableWidthBar').hidden=layout || state.sourceMode || !activeTable?.isConnected;
   }
   function selectionInEditor() {
     const selection = window.getSelection();
@@ -530,12 +552,54 @@
     if (selection) colorRange = selection.getRangeAt(0).cloneRange();
   }
   function applyColor(command, color) {
+    const field=command==='foreColor'?'color':'backgroundColor';
+    const selected=colorRange && !colorRange.collapsed ? [...rich.querySelectorAll('[data-latex]')].filter(node=>colorRange.intersectsNode(node)) : [];
+    if (activeFormula?.isConnected && !selected.includes(activeFormula)) selected.push(activeFormula);
+    selected.forEach(node=>{ node.style[field]=color; });
+    if (selected.length && (!colorRange || colorRange.collapsed)) { showingExample=false; schedule(); return; }
     rich.focus();
     if (colorRange) { const selection = window.getSelection(); selection.removeAllRanges(); selection.addRange(colorRange); }
     document.execCommand('styleWithCSS', false, true);
     document.execCommand(command, false, color);
-    rememberColorSelection(); schedule();
+    rememberColorSelection(); showingExample=false; schedule();
   }
+  function tableWidths(table) {
+    const count=table.querySelector('tr')?.children.length||0;
+    const cols=[...table.querySelectorAll(':scope > colgroup > col')];
+    const widths=cols.map(col=>parseFloat(col.style.width));
+    return widths.length===count && widths.every(value=>Number.isFinite(value)&&value>0) ? widths : Array(count).fill(100/count);
+  }
+  function showTableWidth(cell) {
+    activeTable=cell?.closest('table')||null;
+    $('tableWidthBar').hidden=!activeTable || state.sourceMode;
+    if (!activeTable) return;
+    activeColumn=cell.cellIndex;
+    const count=activeTable.querySelector('tr')?.children.length||1;
+    $('tableColumnNumber').textContent=String(activeColumn+1);
+    $('tableWidthSlider').max=String(100-8*(count-1));
+    $('tableWidthSlider').value=String(Math.round(tableWidths(activeTable)[activeColumn]));
+    $('tableWidthValue').textContent=`${$('tableWidthSlider').value}%`;
+  }
+  $('tableWidthSlider').addEventListener('input',()=>{
+    if (!activeTable?.isConnected) return;
+    const widths=tableWidths(activeTable), value=Number($('tableWidthSlider').value);
+    const remainder=100-value, otherTotal=widths.reduce((sum,width,index)=>sum+(index===activeColumn?0:width),0);
+    const next=widths.map((width,index)=>index===activeColumn?value:Math.max(8,Math.round(remainder*width/otherTotal*10)/10));
+    const last=next.findLastIndex((_,index)=>index!==activeColumn);
+    if (last>=0) next[last]=Math.round((100-next.reduce((sum,width,index)=>sum+(index===last?0:width),0))*10)/10;
+    let group=activeTable.querySelector(':scope > colgroup');
+    if (!group) { group=document.createElement('colgroup'); activeTable.prepend(group); }
+    group.replaceChildren(...next.map(width=>{ const col=document.createElement('col'); col.style.width=`${width}%`; return col; }));
+    $('tableWidthValue').textContent=`${value}%`; showingExample=false; schedule();
+  });
+  $('tableWidthReset').addEventListener('click',()=>{
+    activeTable?.querySelector(':scope > colgroup')?.remove();
+    if (activeTable?.isConnected) {
+      $('tableWidthSlider').value=String(Math.round(tableWidths(activeTable)[activeColumn]));
+      $('tableWidthValue').textContent=`${$('tableWidthSlider').value}%`;
+      showingExample=false; schedule();
+    }
+  });
   function syncControls() {
     $('fontSlider').value = state.font; $('marginSlider').value = state.margin; $('lineSlider').value = state.line;
     $('fontValue').textContent = `${Number(state.font).toFixed(1)} pt`;
@@ -631,6 +695,7 @@
   }
   function render() {
     renderFrame = 0;
+    const previousTop=stage.scrollTop, previousLeft=stage.scrollLeft;
     const landscape = state.orientation === 'landscape';
     const [shortMm,longMm] = paperSizes[state.paperSize];
     const widthMm = landscape ? longMm : shortMm, heightMm = landscape ? shortMm : longMm;
@@ -658,9 +723,85 @@
     const stride = contentW + gap;
     const pageCount = Math.max(1, Math.ceil((fullWidth + gap - 1) / stride));
     for (let number = 1; number <= pageCount; number++) page(number,pageCount,html,columns,width,height,widthMm,heightMm,scale,gap,marginPx,contentW,contentH);
+    stage.scrollTop=previousTop; stage.scrollLeft=previousLeft;
     $('layoutSummary').textContent = `${state.paperSize} ${landscape?'横向':'纵向'} · ${columns} 栏 · 顺序填栏 · ${pageCount} 页`;
     $('charCount').textContent = `${rich.textContent.replace(/\s/g,'').length} 字`;
   }
+
+  const syncSelector='[data-latex],td,th,li,h1,h2,h3,h4,h5,h6,p,pre,blockquote,table';
+  function syncElement(target,root) {
+    const candidate=target.closest?.(syncSelector);
+    if (candidate && root.contains(candidate)) return candidate;
+    let node=target;
+    while (node?.parentElement && node.parentElement!==root) node=node.parentElement;
+    return node!==root && root.contains(node)?node:null;
+  }
+  function elementPath(node,root) {
+    const path=[];
+    while (node && node!==root) {
+      const parent=node.parentElement;
+      if (!parent) return null;
+      path.unshift([...parent.children].indexOf(node)); node=parent;
+    }
+    return node===root?path:null;
+  }
+  function elementAtPath(root,path) {
+    return path?.reduce((node,index)=>node?.children[index],root)||null;
+  }
+  function visiblePart(element,clip) {
+    const boundary=clip.getBoundingClientRect();
+    return [...element.getClientRects()].find(rect=>rect.right>boundary.left+2 && rect.left<boundary.right-2 && rect.bottom>boundary.top+2 && rect.top<boundary.bottom-2);
+  }
+  function jumpToPreview(editorElement) {
+    const path=elementPath(editorElement,rich);
+    if (!path) return;
+    for (const shell of pages.children) {
+      const clip=shell.querySelector('.sheet-clip'), mirror=elementAtPath(shell.querySelector('.sheet-flow'),path);
+      const part=mirror && visiblePart(mirror,clip);
+      if (!part) continue;
+      const stageRect=stage.getBoundingClientRect();
+      stage.scrollTo({top:stage.scrollTop+part.top-stageRect.top-stage.clientHeight/3,behavior:'smooth'});
+      return;
+    }
+  }
+  function jumpToEditor(previewElement,flow) {
+    const mirror=elementAtPath(rich,elementPath(previewElement,flow));
+    if (!mirror) return;
+    if (state.sourceMode) {
+      const phrase=mirror.getAttribute('data-latex')||mirror.textContent.trim().slice(0,50);
+      const index=source.value.indexOf(phrase);
+      if (index<0) return;
+      source.focus(); source.setSelectionRange(index,index);
+      const line=source.value.slice(0,index).split('\n').length-1;
+      source.scrollTop=Math.max(0,line*parseFloat(getComputedStyle(source).lineHeight)-source.clientHeight/3);
+    } else {
+      const rect=mirror.getBoundingClientRect(), editorRect=rich.getBoundingClientRect();
+      rich.scrollTo({top:rich.scrollTop+rect.top-editorRect.top-rich.clientHeight/3,behavior:'smooth'});
+    }
+  }
+  pages.addEventListener('click',event=>{
+    const flow=event.target.closest('.sheet-flow');
+    if (!flow) return;
+    const target=syncElement(event.target,flow);
+    if (target) jumpToEditor(target,flow);
+  });
+  source.addEventListener('click',()=>{
+    const line=source.value.slice(0,source.selectionStart).split('\n').at(-1)?.trim().replace(/^(?:#{1,6}\s+|[-+*]\s+|\d+\.\s+|>\s+|\|\s*)/,'').replace(/\s*\|\s*$/,'')||'';
+    if (!line || line==='$$') return;
+    const formula=line.match(/^\$([^$]+)\$$/);
+    const candidates=formula?[...rich.querySelectorAll('[data-latex]')].filter(node=>node.getAttribute('data-latex')===formula[1]):[...rich.querySelectorAll(syncSelector)].filter(node=>node.textContent.trim().includes(line));
+    const target=candidates.sort((a,b)=>a.textContent.length-b.textContent.length)[0];
+    if (target) jumpToPreview(target);
+  });
+  rich.addEventListener('click',event=>{
+    const formula=event.target.closest?.('[data-latex]');
+    activeFormula=formula && rich.contains(formula)?formula:null;
+    if (activeFormula) colorRange=null;
+    const cell=event.target.closest?.('td,th');
+    showTableWidth(cell && rich.contains(cell)?cell:null);
+    const target=syncElement(event.target,rich);
+    if (target) jumpToPreview(target);
+  });
 
   $('textTab').addEventListener('click',()=>setTab('text'));
   $('layoutTab').addEventListener('click',()=>setTab('layout'));
@@ -669,6 +810,7 @@
     if (state.sourceMode) { source.value=htmlToMarkdown(rich); sourceDirty=false; }
     else if (sourceDirty) rich.innerHTML=markdownToHtml(source.value);
     rich.hidden=state.sourceMode; source.hidden=!state.sourceMode;
+    $('tableWidthBar').hidden=state.sourceMode || $('layoutTab').classList.contains('active') || !activeTable?.isConnected;
     $('sourceBtn').textContent=state.sourceMode?'返回文字编辑':'源码编辑';
     $('sourceBtn').title=state.sourceMode?'返回格式化文字编辑':'编辑 Markdown 源码';
     $('sourceBtn').setAttribute('aria-pressed',String(state.sourceMode));
@@ -717,7 +859,7 @@
   $('formulaInsertBtn').addEventListener('click',()=>{
     const latex=$('formulaInput').value.trim();
     if (!latex) { $('formulaInput').focus(); return; }
-    const html=formulaHtml(latex,$('formulaDisplay').checked);
+    const html=formulaHtml(latex,$('formulaDisplay').checked,formulaTarget?.style.color,formulaTarget?.style.backgroundColor);
     $('formulaDialog').close();
     if (formulaTarget?.isConnected) formulaTarget.outerHTML=html;
     else {
