@@ -555,7 +555,7 @@
     const field=command==='foreColor'?'color':'backgroundColor';
     const selected=colorRange && !colorRange.collapsed ? [...rich.querySelectorAll('[data-latex]')].filter(node=>colorRange.intersectsNode(node)) : [];
     if (activeFormula?.isConnected && !selected.includes(activeFormula)) selected.push(activeFormula);
-    selected.forEach(node=>{ node.style[field]=color; });
+    selected.forEach(node=>{ node.style[field]=command==='hiliteColor' && color.toLowerCase()==='#ffffff'?'':color; });
     if (selected.length && (!colorRange || colorRange.collapsed)) { showingExample=false; schedule(); return; }
     rich.focus();
     if (colorRange) { const selection = window.getSelection(); selection.removeAllRanges(); selection.addRange(colorRange); }

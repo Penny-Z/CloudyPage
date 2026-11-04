@@ -143,7 +143,7 @@ button { cursor:pointer; }
 .choice-row.paper-sizes button:last-child { min-width:48px; }
 .slider-setting { width:126px; }.setting input[type="range"] { width:100%; margin:0; accent-color:#2d8c55; cursor:pointer; }
 .preview-pane { position:relative; min-width:0; min-height:0; background:#edf0f2; display:flex; flex-direction:column; }
-.preview-info { flex:none; height:35px; display:flex; align-items:center; padding:0 19px; font-size:11px; color:#6e7a81; font-weight:700; }
+.preview-info { flex:none; height:35px; display:flex; align-items:center; justify-content:space-between; gap:12px; padding:0 19px; font-size:11px; color:#6e7a81; font-weight:700; }.sync-hint { color:#91a0a9; font-size:10px; font-weight:500; }
 .preview-stage { flex:1; min-height:0; overflow:auto; padding:0 17px 25px; }
 .pages { display:flex; flex-direction:column; align-items:center; gap:20px; }
 .page-shell { flex:none; position:relative; }
@@ -279,11 +279,11 @@ button { cursor:pointer; }
         </div>
         <div id="richEditor" class="rich-editor" contenteditable="true" role="textbox" aria-multiline="true" aria-label="可直接编辑的速查表内容" spellcheck="true"></div>
         <textarea id="markdownEditor" class="markdown-editor" aria-label="Markdown 源码" spellcheck="false" hidden></textarea>
-        <div class="editor-foot"><span>可粘贴 Markdown；草稿箱中可随时载入内置示例</span><span id="charCount">0 字</span></div>
+        <div class="editor-foot"><span>点击正文可定位右侧预览；草稿箱可载入示例</span><span id="charCount">0 字</span></div>
       </div>
     </section>
     <section class="preview-pane" aria-label="多栏排版预览">
-      <div class="preview-info"><span id="layoutSummary">A4 横向 · 4 栏 · 顺序填栏 · 1 页</span></div>
+      <div class="preview-info"><span id="layoutSummary">A4 横向 · 4 栏 · 顺序填栏 · 1 页</span><span class="sync-hint">点击预览可定位左侧内容</span></div>
       <div id="previewStage" class="preview-stage"><div id="pages" class="pages"></div></div>
       <div class="zoom-controls" aria-label="预览缩放"><button id="zoomOut" title="缩小">−</button><output id="zoomValue">100%</output><button id="zoomIn" title="放大">＋</button></div>
     </section>
@@ -869,7 +869,7 @@ button { cursor:pointer; }
     const field=command==='foreColor'?'color':'backgroundColor';
     const selected=colorRange && !colorRange.collapsed ? [...rich.querySelectorAll('[data-latex]')].filter(node=>colorRange.intersectsNode(node)) : [];
     if (activeFormula?.isConnected && !selected.includes(activeFormula)) selected.push(activeFormula);
-    selected.forEach(node=>{ node.style[field]=color; });
+    selected.forEach(node=>{ node.style[field]=command==='hiliteColor' && color.toLowerCase()==='#ffffff'?'':color; });
     if (selected.length && (!colorRange || colorRange.collapsed)) { showingExample=false; schedule(); return; }
     rich.focus();
     if (colorRange) { const selection = window.getSelection(); selection.removeAllRanges(); selection.addRange(colorRange); }
