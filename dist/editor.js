@@ -32,6 +32,21 @@
     syncScreen();
   }
   window.addEventListener('hashchange', handleHashChange);
+  async function copyPrompt(input,status) {
+    try {
+      if (navigator.clipboard?.writeText) await navigator.clipboard.writeText(input.value);
+      else { input.focus(); input.select(); if (!document.execCommand('copy')) throw new Error('copy failed'); }
+      status.textContent='已复制，可以粘贴给你常用的 AI。';
+    } catch {
+      input.focus(); input.select(); status.textContent='复制未成功，已选中文本；请按 Ctrl+C 复制。';
+    }
+  }
+  const homePrompt=$('promptTemplate'), editorPrompt=$('editorPromptTemplate');
+  editorPrompt.value=homePrompt.value;
+  homePrompt.addEventListener('input',()=>{ editorPrompt.value=homePrompt.value; });
+  editorPrompt.addEventListener('input',()=>{ homePrompt.value=editorPrompt.value; });
+  $('copyPromptBtn').addEventListener('click',()=>copyPrompt(homePrompt,$('promptCopyStatus')));
+  $('copyEditorPromptBtn').addEventListener('click',()=>copyPrompt(editorPrompt,$('editorPromptCopyStatus')));
   function setupGuidedDemo() {
     const demo = $('guidedDemo');
     if (!demo) return;
@@ -506,11 +521,79 @@
 
   function setTab(tab) {
     const layout = tab === 'layout';
-    $('textTab').classList.toggle('active', !layout); $('layoutTab').classList.toggle('active', layout);
-    $('textTab').setAttribute('aria-selected', String(!layout)); $('layoutTab').setAttribute('aria-selected', String(layout));
-    $('textToolbar').hidden = layout; $('layoutPanel').hidden = !layout;
-    $('tableWidthBar').hidden=layout || state.sourceMode || !activeTable?.isConnected;
+    const prompt = tab === 'prompt';
+    for (const [id,active] of [['textTab',!layout&&!prompt],['layoutTab',layout],['promptTab',prompt]]) {
+      $(id).classList.toggle('active',active);
+      $(id).setAttribute('aria-selected',String(active));
+    }
+    $('textToolbar').hidden=layout || prompt;
+    $('layoutPanel').hidden=!layout;
+    $('editorPromptPanel').hidden=!prompt;
+    rich.hidden=prompt || state.sourceMode;
+    source.hidden=prompt || !state.sourceMode;
+    $('editorFoot').hidden=prompt;
+    $('tableWidthBar').hidden=layout || prompt || state.sourceMode || !activeTable?.isConnected;
   }
+  const tourSteps=[
+    {tab:'text',target:'textToolbar',title:'用文字工具整理重点',text:'选中文字可设置标题、加粗、列表和颜色。选中已有的公式文字后点“公式”，内容会自动带入弹窗，不用重新输入。'},
+    {tab:'text',target:'richEditor',title:'在这里写或粘贴笔记',text:'可以像写笔记一样直接编辑。若已有 Markdown，点右上角“源码编辑”再粘贴。'},
+    {tab:'layout',target:'layoutPanel',title:'让纸张适应你的内容',text:'在“布局”中选纸张、横竖方向和栏数，再拖动字号、页边距与行距。'},
+    {tab:'prompt',target:'editorPromptPanel',title:'没有笔记？先用 AI 提示词',text:'填写课程和考试要求，复制模板给常用的 AI。生成 Markdown 后回到“文字”粘贴。'},
+    {tab:'text',target:'previewStage',title:'右侧实时查看排版',text:'内容会顺序填满一栏再进入下一栏。点击预览中的内容，还能定位左侧对应文字。'},
+    {tab:'text',target:'printBtn',title:'保存草稿或导出 PDF',text:'顶部可保存多份草稿、下载 Markdown。确认排版后，点“打印 / PDF”保存文件。'}
+  ];
+  let tourIndex=0, tourRestoreTab='text';
+  function positionTour() {
+    if ($('tourOverlay').hidden) return;
+    const target=$(tourSteps[tourIndex].target);
+    const rect=target.getBoundingClientRect(), spot=$('tourSpotlight'), card=$('tourCard');
+    const pad=5, left=Math.max(6,rect.left-pad), top=Math.max(6,rect.top-pad);
+    const right=Math.min(innerWidth-6,rect.right+pad), bottom=Math.min(innerHeight-6,rect.bottom+pad);
+    Object.assign(spot.style,{left:`${left}px`,top:`${top}px`,width:`${Math.max(24,right-left)}px`,height:`${Math.max(24,bottom-top)}px`});
+    const cardWidth=card.offsetWidth, cardHeight=card.offsetHeight, gap=18;
+    const clamp=(value,min,max)=>Math.max(min,Math.min(value,max));
+    let cardLeft, cardTop;
+    if (right+gap+cardWidth<innerWidth-12) {
+      cardLeft=right+gap; cardTop=clamp(top+(bottom-top-cardHeight)/2,12,innerHeight-cardHeight-12);
+    } else if (left-gap-cardWidth>12) {
+      cardLeft=left-gap-cardWidth; cardTop=clamp(top+(bottom-top-cardHeight)/2,12,innerHeight-cardHeight-12);
+    } else {
+      cardLeft=clamp((innerWidth-cardWidth)/2,12,innerWidth-cardWidth-12);
+      cardTop=bottom+gap+cardHeight<innerHeight ? bottom+gap : clamp(top-cardHeight-gap,12,innerHeight-cardHeight-12);
+    }
+    Object.assign(card.style,{left:`${cardLeft}px`,top:`${cardTop}px`});
+  }
+  function showTourStep() {
+    const step=tourSteps[tourIndex];
+    setTab(step.tab);
+    $(step.target).scrollIntoView({block:'nearest'});
+    $('tourProgress').textContent=`${String(tourIndex+1).padStart(2,'0')} / ${String(tourSteps.length).padStart(2,'0')}`;
+    $('tourTitle').textContent=step.title;
+    $('tourText').textContent=step.text;
+    $('tourPrevBtn').disabled=tourIndex===0;
+    $('tourNextBtn').textContent=tourIndex===tourSteps.length-1?'完成教学':'下一步 →';
+    requestAnimationFrame(positionTour);
+  }
+  function closeTour() {
+    $('tourOverlay').hidden=true;
+    setTab(tourRestoreTab);
+    $('tourBtn').focus();
+  }
+  $('tourBtn').addEventListener('click',()=>{
+    tourRestoreTab=$('layoutTab').classList.contains('active')?'layout':$('promptTab').classList.contains('active')?'prompt':'text';
+    tourIndex=0; $('tourOverlay').hidden=false; showTourStep(); $('tourCloseBtn').focus();
+  });
+  $('tourCloseBtn').addEventListener('click',closeTour);
+  $('tourPrevBtn').addEventListener('click',()=>{ if(tourIndex>0) { tourIndex--; showTourStep(); } });
+  $('tourNextBtn').addEventListener('click',()=>{ if(tourIndex===tourSteps.length-1) closeTour(); else { tourIndex++; showTourStep(); } });
+  document.addEventListener('keydown',event=>{
+    if ($('tourOverlay').hidden) return;
+    if (event.key==='Escape') { event.preventDefault(); closeTour(); }
+    else if (event.key==='ArrowRight' && tourIndex<tourSteps.length-1) { event.preventDefault(); tourIndex++; showTourStep(); }
+    else if (event.key==='ArrowLeft' && tourIndex>0) { event.preventDefault(); tourIndex--; showTourStep(); }
+  });
+  window.addEventListener('scroll',positionTour,true);
+  window.addEventListener('resize',positionTour);
   function selectionInEditor() {
     const selection = window.getSelection();
     return selection?.rangeCount && rich.contains(selection.getRangeAt(0).commonAncestorContainer) ? selection : null;
@@ -805,6 +888,8 @@
 
   $('textTab').addEventListener('click',()=>setTab('text'));
   $('layoutTab').addEventListener('click',()=>setTab('layout'));
+  $('promptTab').addEventListener('click',()=>setTab('prompt'));
+  $('returnTextBtn').addEventListener('click',()=>setTab('text'));
   $('sourceBtn').addEventListener('click',()=>{
     state.sourceMode=!state.sourceMode;
     if (state.sourceMode) { source.value=htmlToMarkdown(rich); sourceDirty=false; }
@@ -814,10 +899,10 @@
     $('sourceBtn').textContent=state.sourceMode?'返回文字编辑':'源码编辑';
     $('sourceBtn').title=state.sourceMode?'返回格式化文字编辑':'编辑 Markdown 源码';
     $('sourceBtn').setAttribute('aria-pressed',String(state.sourceMode));
-    document.querySelectorAll('[data-command],[data-block],#linkBtn,#codeBtn,#mathInlineBtn,#mathBlockBtn,#tableBtn,#columnBreakBtn,[data-palette-trigger],.swatches button').forEach(button=>button.disabled=state.sourceMode);
+    document.querySelectorAll('[data-command],[data-block],#linkBtn,#codeBtn,#mathInlineBtn,#tableBtn,#columnBreakBtn,[data-palette-trigger],.swatches button').forEach(button=>button.disabled=state.sourceMode);
     (state.sourceMode?source:rich).focus(); schedule();
   });
-  document.querySelectorAll('.toolbar button[data-command],.toolbar button[data-block],#linkBtn,#codeBtn,#mathInlineBtn,#mathBlockBtn,#tableBtn,#columnBreakBtn,[data-palette-trigger],.swatches button').forEach(button=>button.addEventListener('mousedown',event=>{ if (button.dataset.paletteTrigger) rememberColorSelection(); event.preventDefault(); }));
+  document.querySelectorAll('.toolbar button[data-command],.toolbar button[data-block],#linkBtn,#codeBtn,#mathInlineBtn,#tableBtn,#columnBreakBtn,[data-palette-trigger],.swatches button').forEach(button=>button.addEventListener('mousedown',event=>{ if (button.dataset.paletteTrigger) rememberColorSelection(); event.preventDefault(); }));
   const paletteColors = {
     foreColor:[['黑色','#20272b'],['深灰','#667085'],['红色','#c62828'],['橙色','#e46b12'],['黄色','#b68400'],['绿色','#23814a'],['蓝色','#2563c9'],['紫色','#7b43b5'],['青色','#087f8c'],['粉色','#c83c81'],['棕色','#8a5a30'],['白色','#ffffff']],
     hiliteColor:[['无高亮','#ffffff'],['淡黄','#fff2ad'],['淡绿','#d9f3d9'],['淡蓝','#dcecff'],['淡粉','#ffe0ec'],['淡橙','#ffe6c9'],['淡紫','#ecdefa'],['亮黄','#ffe45c'],['薄荷','#b7eacb'],['青绿','#b9e7e9'],['浅灰','#e7eaed'],['珊瑚','#ffd2ca']]
@@ -852,7 +937,6 @@
     updateFormulaPreview(); $('formulaDialog').showModal(); $('formulaInput').focus(); $('formulaInput').select();
   }
   $('mathInlineBtn').addEventListener('click',()=>openFormulaDialog(false));
-  $('mathBlockBtn').addEventListener('click',()=>openFormulaDialog(true));
   $('formulaInput').addEventListener('input',updateFormulaPreview);
   $('formulaDisplay').addEventListener('change',updateFormulaPreview);
   $('formulaCancelBtn').addEventListener('click',()=>$('formulaDialog').close());

@@ -16,7 +16,7 @@
   <div id="homeScreen" class="home-screen">
     <header class="home-header">
       <a class="home-brand" href="#home" aria-label="CloudyPage 云中笺首页"><span class="home-mark" aria-hidden="true">☁</span><span>CloudyPage <small>云中笺</small></span></a>
-      <nav class="home-nav" aria-label="首页导航"><a href="#demo">功能演示</a><a href="#features">产品特点</a><a href="#use-cases">适用场景</a><a href="#updates">更新日志</a><a href="#how-it-works">如何使用</a><a href="#feedback">反馈建议</a><a href="https://github.com/Penny-Z/CloudyPage" target="_blank" rel="noopener noreferrer">GitHub ↗</a></nav>
+      <nav class="home-nav" aria-label="首页导航"><a href="#prompt-guide">AI 提示词</a><a href="#demo">功能演示</a><a href="#features">产品特点</a><a href="#use-cases">适用场景</a><a href="#updates">更新日志</a><a href="https://github.com/Penny-Z/CloudyPage" target="_blank" rel="noopener noreferrer">GitHub ↗</a></nav>
       <a class="home-header-cta" href="#editor">立即使用 <span aria-hidden="true">↗</span></a>
     </header>
     <main id="homeMain">
@@ -27,6 +27,7 @@
           <p>专为 Cheatsheet 排版设计：粘贴 Markdown，像写笔记一样编辑；再调整栏数、字号和方向，整理成清晰紧凑、方便打印查阅的一页。</p>
           <div class="hero-actions"><a class="hero-primary" href="#editor">立即使用 <span aria-hidden="true">→</span></a><a class="hero-secondary" href="#demo">试试功能演示 <span aria-hidden="true">↓</span></a></div>
           <div class="hero-notes"><span>无需注册</span><span>本地保存</span><span>可导出 PDF</span></div>
+          <a class="hero-guide-link" href="#prompt-guide">还没有 Markdown 笔记？试试 AI 提示词模板 <span aria-hidden="true">↗</span></a>
         </div>
         <div class="hero-visual" aria-label="CloudyPage 多栏速查表排版示意">
           <div class="visual-glow"></div>
@@ -38,6 +39,27 @@
             </div>
           </div>
           <div class="visual-float">☁ <span>内容填满一栏，再流向下一栏</span></div>
+        </div>
+      </section>
+      <section id="prompt-guide" class="home-section prompt-section" aria-labelledby="promptTitle">
+        <div class="section-intro"><span class="section-kicker">START WITH YOUR NOTES</span><h2 id="promptTitle">还没有整理好的笔记？</h2><p>把课程资料交给你常用的 AI，让它先生成 Markdown；再粘贴到 CloudyPage 调整排版。</p></div>
+        <div class="prompt-workspace">
+          <div class="prompt-steps"><div><span>01</span><p>填写模板里的课程、考试和篇幅要求。</p></div><div><span>02</span><p>复制提示词，连同课件、练习等资料发给 AI。</p></div><div><span>03</span><p>检查生成内容，再粘贴到 CloudyPage 排版。</p></div><a href="#editor">打开排版器 <span aria-hidden="true">→</span></a></div>
+          <div class="prompt-card"><div class="prompt-card-head"><div><strong>复习资料整理提示词</strong><span>可直接编辑括号中的内容</span></div><button id="copyPromptBtn" type="button">复制提示词</button></div><label class="sr-only" for="promptTemplate">可编辑的复习资料整理提示词</label><textarea id="promptTemplate" spellcheck="false">你是一名擅长讲解【课程/主题】的老师。我是一名【专业】的学生，正在准备【考试或用途】。请帮我把接下来提供的资料整理成一份Markdown格式的cheatsheet笔记。目标篇幅是【页数或字数；不确定可留空】。
+
+我会提供以下资料（没有的可以跳过）：课程 slides、syllabus、quiz、exercise 和我的课堂笔记。
+
+请遵循这些要求：
+
+1. 只使用我提供的资料。优先保留课程明确强调、练习或测验考过的内容；删去重复叙述，但不要省略理解和作答所必需的条件、定义与例外。
+2. 先用简短的分层列表给出整门课的知识框架，再按章节或主题整理：核心概念、关键公式与适用条件、解题或分析步骤、常见易错点。每章最后用一两句通俗的话解释核心思路，帮助记忆。
+3. 首次出现的重要英文术语保留原文，专有名称用括号加一下中文注释，尤其是我在考试作答中可能会用到的英文专有名词。
+4. 给我一些考试简答题可能会用到的答题模板，比如可以从哪些维度思考并回答。
+5. 直接输出 Markdown 正文，不要套代码块，不要用 HTML、彩色文字、高亮、Mermaid 或 Word专用格式。使用 #、##、### 标题和简短列表；只有比较信息时才使用简单表格。
+6. 行内公式使用 $...$，独立公式使用 $$...$$；多行推导使用 $$ 内的 aligned 环境。
+7. 【其他要求】
+
+如资料太多，请先按上述结构输出第一部分，并说明还剩哪些章节，等待我让你继续。现在请先确认收到的资料及可读取情况，再开始整理。</textarea><p id="promptCopyStatus" class="prompt-copy-status" role="status" aria-live="polite"></p></div>
         </div>
       </section>
       <section id="demo" class="home-section guided-demo" aria-labelledby="demoTitle">
@@ -78,11 +100,12 @@
           <aside class="demo-guide"><span class="demo-guide-step" id="demoGuideStep">01 / 先试试</span><h3 id="demoGuideTitle">每个按钮都有回应。</h3><p id="demoGuideText" aria-live="polite">试试源码编辑、加粗或高亮；切到“布局”还可以改变纸张方向、栏数和字号。</p><div class="demo-guide-hint">↗ 点击演示窗口中的按钮</div><a href="#editor" class="demo-guide-cta">打开完整排版器 <span aria-hidden="true">→</span></a></aside>
         </div>
       </section>
-      <section id="features" class="home-section features-section" aria-labelledby="featuresTitle"><div class="section-intro"><span class="section-kicker">WHY CLOUDYPAGE</span><h2 id="featuresTitle">少一点调整，<br>多一点专注。</h2><p>从一段长笔记，到一张真正能用的速查表。</p></div><div class="feature-grid"><article class="feature-card"><span class="feature-icon">✎</span><span class="feature-number">01 / 编辑</span><h3>写起来顺手</h3><p>粘贴 Markdown 后继续直接编辑。标题、列表、文字颜色和高亮，都可以随手调整。</p></article><article class="feature-card"><span class="feature-icon">▤</span><span class="feature-number">02 / 排版</span><h3>多栏自然流动</h3><p>内容依次填满每一栏。A3、A4、A5、B5 和 Letter 纸张均可选择，方向、字号和栏数也能边看预览边调整。</p></article><article class="feature-card"><span class="feature-icon">↗</span><span class="feature-number">03 / 带走</span><h3>一页随时可查</h3><p>打印或保存 PDF，也能下载 Markdown。编辑内容自动保存在当前浏览器。</p></article></div><div class="source-callout"><div><span class="section-kicker">OPEN SOURCE</span><h3>想按自己的习惯调整？</h3><p>前往 GitHub 下载原代码，可在非商业许可范围内微调功能与样式，做成适合自己的排版器。</p></div><a href="https://github.com/Penny-Z/CloudyPage" target="_blank" rel="noopener noreferrer">查看 GitHub 源码 <span aria-hidden="true">↗</span></a></div></section>
+      <section id="features" class="home-section features-section" aria-labelledby="featuresTitle"><div class="section-intro"><span class="section-kicker">WHY CLOUDYPAGE</span><h2 id="featuresTitle">少一点调整，<br>多一点专注。</h2><p>从一段长笔记，到一张真正能用的速查表。</p></div><div class="feature-grid"><article class="feature-card"><span class="feature-icon">✎</span><span class="feature-number">01 / 编辑</span><h3>写起来顺手</h3><p>粘贴 Markdown 后继续直接编辑。标题、列表、文字颜色和高亮，都可以随手调整。</p></article><article class="feature-card"><span class="feature-icon">▤</span><span class="feature-number">02 / 排版</span><h3>多栏自然流动</h3><p>内容依次填满每一栏。A3、A4、A5、B5 和 Letter 纸张均可选择，方向、字号和栏数也能边看预览边调整。</p></article><article class="feature-card"><span class="feature-icon">↗</span><span class="feature-number">03 / 带走</span><h3>一页随时可查</h3><p>打印或保存 PDF，也能下载 Markdown。编辑内容自动保存在当前浏览器。</p></article></div><p class="browser-note"><strong>Mac 导出 PDF 提示：</strong>建议使用 Chrome 或 Microsoft Edge 打开 CloudyPage；Safari 导出 PDF 时可能出现格式错乱。</p><div class="source-callout"><div><span class="section-kicker">OPEN SOURCE</span><h3>想按自己的习惯调整？</h3><p>前往 GitHub 下载原代码，可在非商业许可范围内微调功能与样式，做成适合自己的排版器。</p></div><a href="https://github.com/Penny-Z/CloudyPage" target="_blank" rel="noopener noreferrer">查看 GitHub 源码 <span aria-hidden="true">↗</span></a></div></section>
       <section id="use-cases" class="home-section use-cases-section" aria-labelledby="useCasesTitle"><div class="section-intro"><span class="section-kicker">MADE FOR QUICK REFERENCE</span><h2 id="useCasesTitle">一页速查，也适合这些场景。</h2><p>把常用信息压缩整理，放在需要快速查找的地方。</p></div><div class="feature-grid"><article class="feature-card"><span class="feature-icon">▤</span><span class="feature-number">01 / 考试</span><h3>制作 Cheatsheet</h3><p>整理公式、核心概念、解题步骤和易错点，考前复习或按规则准备考试资料。</p></article><article class="feature-card"><span class="feature-icon">⌂</span><span class="feature-number">02 / 课程</span><h3>课程复习提纲</h3><p>把章节脉络、知识联系和重点问题放到一页，快速回顾课程全貌。</p></article><article class="feature-card"><span class="feature-icon">⌕</span><span class="feature-number">03 / 开卷</span><h3>开卷资料索引</h3><p>按主题、题型或关键词整理资料位置，减少考试或查阅时翻找的时间。</p></article><article class="feature-card"><span class="feature-icon">✓</span><span class="feature-number">04 / 实验与实习</span><h3>流程和检查清单</h3><p>集中记录操作步骤、参数范围、注意事项和完成前的核对项目。</p></article><article class="feature-card"><span class="feature-icon">↗</span><span class="feature-number">05 / 会议与汇报</span><h3>提纲和讲述提示</h3><p>把关键数据、汇报顺序、过渡提示和待确认问题整理成随手可看的提纲。</p></article><article class="feature-card"><span class="feature-icon">⌘</span><span class="feature-number">06 / 项目与工具</span><h3>命令和术语速查</h3><p>归纳常用命令、字段含义、操作步骤和项目约定，方便团队随时查阅。</p></article></div></section>
       <section id="updates" class="home-section updates-section" aria-labelledby="updatesTitle">
         <div class="section-intro"><span class="section-kicker">CHANGELOG</span><h2 id="updatesTitle">更新日志</h2></div>
         <div class="updates-list">
+          <article class="update-card"><div class="update-heading"><time datetime="2026-11-05">2026 年 11 月 5 日</time><h3>从资料到排版，更容易上手</h3></div><ul><li>首页和编辑器新增可直接复制的 AI 提示词模板，方便把课程资料整理成 Markdown 笔记。</li><li>编辑界面新增“功能教学”，分步介绍文字、布局、提示词、预览和导出，更易上手。</li><li>编辑栏图标简化，公式插入更便利。</li><li>其他细节修改优化。</li></ul></article>
           <article class="update-card"><div class="update-heading"><time datetime="2026-11-04">2026 年 11 月 4 日</time><h3>编辑与预览更顺手</h3></div><ul><li>公式也支持设置文字颜色和高亮了！</li><li>点击编辑区或预览区，可跳到另一侧的对应内容，更方便预览、修改。</li><li>点击编辑区的表格，可调整所在列宽度。</li></ul></article>
           <article class="update-card"><div class="update-heading"><time datetime="2026-10-07">2026 年 10 月 7 日</time><h3>CloudyPage 上线</h3></div><ul><li>支持 Markdown 编辑、公式、多栏排版和 PDF 导出。</li><li>可调整纸张尺寸、方向、栏数与字号，并在浏览器中保存多份草稿。</li></ul></article>
         </div>
@@ -94,20 +117,20 @@
   <div id="appScreen" class="app-screen" hidden>
   <header class="topbar">
     <div class="brand"><a class="editor-home-link" href="#home" title="返回首页" aria-label="返回 CloudyPage 首页"><span class="brand-icon">☁</span><strong>CloudyPage <span>云中笺</span></strong></a><span class="mode-label">Cheatsheet 排版器</span><span class="save-status" id="saveStatus">● 已自动保存</span></div>
-    <div class="top-actions"><button id="saveDraftBtn" class="quiet draft-save" title="另存一份命名草稿">保存草稿</button><button id="openDraftsBtn" class="quiet" title="查看草稿和内置示例">草稿箱</button><button id="downloadMdBtn" class="quiet" title="下载 Markdown">下载 .md</button><button id="printBtn" class="primary">↓ 打印 / PDF</button></div>
+    <div class="top-actions"><button id="tourBtn" class="tour-launch" type="button" title="分步认识编辑器" aria-label="功能教学"><span aria-hidden="true">?</span><span class="tour-launch-label">功能教学</span></button><button id="saveDraftBtn" class="quiet draft-save" title="另存一份命名草稿">保存草稿</button><button id="openDraftsBtn" class="quiet" title="查看草稿和内置示例">草稿箱</button><button id="downloadMdBtn" class="quiet" title="下载 Markdown">下载 .md</button><button id="printBtn" class="primary">↓ 打印 / PDF</button></div>
   </header>
   <main class="workspace">
     <section class="editing-pane" aria-label="内容编辑">
-      <div class="tabs" role="tablist"><button id="textTab" class="tab active" role="tab" aria-selected="true">▤ 文字</button><button id="layoutTab" class="tab" role="tab" aria-selected="false">▦ 布局</button></div>
+      <div class="tabs" role="tablist"><button id="textTab" class="tab active" role="tab" aria-selected="true">▤ 文字</button><button id="layoutTab" class="tab" role="tab" aria-selected="false">▦ 布局</button><button id="promptTab" class="tab" role="tab" aria-selected="false">✦ AI 提示词</button></div>
       <div id="textPanel" class="panel text-panel" role="tabpanel">
         <div id="textToolbar" class="toolbar" role="toolbar" aria-label="文字格式">
-          <div class="tool-group"><button data-command="bold" title="加粗 Ctrl+B"><b>B</b></button><button data-command="italic" title="斜体 Ctrl+I"><i>I</i></button></div>
-          <div class="tool-group"><button data-block="h1" title="一级标题">H₁</button><button data-block="h2" title="二级标题">H₂</button><button data-block="h3" title="三级标题">H₃</button></div>
-          <div class="tool-group"><button data-command="insertUnorderedList" title="项目符号">☷</button><button data-command="insertOrderedList" title="编号列表">1.</button></div>
-          <div class="tool-group"><div class="palette-wrap"><button id="textColorBtn" class="palette-trigger" data-palette-trigger="foreColor" title="文字颜色" aria-expanded="false">A̲ <span class="color-caret">▾</span></button><div id="textColorPalette" class="color-palette" hidden><span class="palette-title">文字颜色</span><div class="swatches" data-palette="foreColor"></div><label class="custom-color">自定义 <input id="textColorCustom" type="color" value="#256449" aria-label="自定义文字颜色"></label></div></div><div class="palette-wrap"><button id="highlightBtn" class="palette-trigger" data-palette-trigger="hiliteColor" title="高亮颜色" aria-expanded="false">◩ <span class="color-caret">▾</span></button><div id="highlightPalette" class="color-palette" hidden><span class="palette-title">高亮颜色</span><div class="swatches" data-palette="hiliteColor"></div><label class="custom-color">自定义 <input id="highlightCustom" type="color" value="#fff2ad" aria-label="自定义高亮颜色"></label></div></div><button id="linkBtn" title="插入链接">↗</button><button id="codeBtn" title="行内代码：排版变量名、命令或代码片段，不会渲染公式">&lt;/&gt;</button><button id="mathInlineBtn" title="插入行内公式（LaTeX）" aria-label="插入行内公式">∑</button><button id="mathBlockBtn" title="插入独立公式（LaTeX）" aria-label="插入独立公式">∑↓</button><button id="tableBtn" title="插入表格">▦</button></div>
-          <div class="tool-group"><button id="columnBreakBtn" title="从下一栏开始">↦|</button></div>
-          <div class="tool-group"><button data-command="undo" title="撤销">↶</button><button data-command="redo" title="重做">↷</button></div>
+          <div class="tool-group" aria-label="标题与文字"><button data-block="h1" title="一级标题" aria-label="一级标题">H₁</button><button data-block="h2" title="二级标题" aria-label="二级标题">H₂</button><button data-block="h3" title="三级标题" aria-label="三级标题">H₃</button><span class="tool-divider"></span><button data-command="bold" title="加粗 Ctrl+B" aria-label="加粗"><b>B</b></button><button data-command="italic" title="斜体 Ctrl+I" aria-label="斜体"><i>I</i></button></div>
+          <div class="tool-group" aria-label="列表"><button data-command="insertUnorderedList" title="项目符号列表" aria-label="项目符号列表"><span class="tool-symbol">☷</span><span class="tool-word">列表</span></button><button data-command="insertOrderedList" title="编号列表" aria-label="编号列表"><span class="tool-symbol">1.</span><span class="tool-word">编号</span></button></div>
+          <div class="tool-group" aria-label="颜色"><div class="palette-wrap"><button id="textColorBtn" class="palette-trigger" data-palette-trigger="foreColor" title="文字颜色" aria-label="文字颜色" aria-expanded="false"><span class="tool-color-letter">A</span><span class="tool-word">颜色</span><span class="color-caret">▾</span></button><div id="textColorPalette" class="color-palette" hidden><span class="palette-title">文字颜色</span><div class="swatches" data-palette="foreColor"></div><label class="custom-color">自定义 <input id="textColorCustom" type="color" value="#256449" aria-label="自定义文字颜色"></label></div></div><div class="palette-wrap"><button id="highlightBtn" class="palette-trigger" data-palette-trigger="hiliteColor" title="高亮颜色" aria-label="高亮颜色" aria-expanded="false"><span class="tool-highlight-icon">▰</span><span class="tool-word">高亮</span><span class="color-caret">▾</span></button><div id="highlightPalette" class="color-palette" hidden><span class="palette-title">高亮颜色</span><div class="swatches" data-palette="hiliteColor"></div><label class="custom-color">自定义 <input id="highlightCustom" type="color" value="#fff2ad" aria-label="自定义高亮颜色"></label></div></div></div>
+          <div class="tool-group" aria-label="插入内容"><button id="linkBtn" title="插入链接" aria-label="插入链接"><span class="tool-symbol">↗</span><span class="tool-word">链接</span></button><button id="codeBtn" title="行内代码：排版变量名、命令或代码片段，不会渲染公式" aria-label="插入行内代码"><span class="tool-symbol tool-code">&lt;/&gt;</span><span class="tool-word">代码</span></button><button id="mathInlineBtn" title="插入公式，可在弹窗中选择行内或行间" aria-label="插入公式"><span class="tool-symbol">∑</span><span class="tool-word">公式</span></button><button id="tableBtn" title="插入表格" aria-label="插入表格"><span class="tool-symbol">▦</span><span class="tool-word">表格</span></button></div>
+          <div class="tool-group" aria-label="排版与历史"><button id="columnBreakBtn" title="从下一栏开始" aria-label="从下一栏开始"><span class="tool-symbol">→|</span><span class="tool-word">换栏</span></button><button data-command="undo" title="撤销" aria-label="撤销">↶</button><button data-command="redo" title="重做" aria-label="重做">↷</button></div>
           <button id="sourceBtn" class="source-button" aria-pressed="false" title="编辑 Markdown 源码">源码编辑</button>
+          <span class="toolbar-tip">小技巧：选中已有的公式文字，再点“公式”，可直接转换，无需重新输入。</span>
         </div>
         <div id="layoutPanel" class="layout-toolbar" role="toolbar" aria-label="排版设置" hidden>
           <div class="setting"><div class="setting-top"><label>纸张尺寸</label></div><div class="choice-row paper-sizes" role="group" aria-label="纸张尺寸"><button data-paper-size="A3" aria-pressed="false">A3</button><button data-paper-size="A4" aria-pressed="true">A4</button><button data-paper-size="A5" aria-pressed="false">A5</button><button data-paper-size="B5" aria-pressed="false">B5</button><button data-paper-size="Letter" aria-pressed="false">Letter</button></div></div>
@@ -124,9 +147,14 @@
           <button id="tableWidthReset" type="button">等宽</button>
           <span>点击表格单元格后调整</span>
         </div>
+        <div id="editorPromptPanel" class="editor-prompt-panel" role="tabpanel" aria-labelledby="promptTab" hidden>
+          <div class="editor-prompt-intro"><span class="editor-prompt-kicker">从资料到速查笔记</span><h2>先生成内容，再交给云中笺排版。</h2><p>在括号中填上你的课程和考试要求，复制给常用的 AI，并附上课件或练习。拿到 Markdown 后切回“文字”，直接粘贴即可。</p></div>
+          <div class="editor-prompt-card"><div class="editor-prompt-card-head"><strong>复习资料整理提示词</strong><button id="copyEditorPromptBtn" type="button">复制提示词</button></div><label class="sr-only" for="editorPromptTemplate">可编辑的复习资料整理提示词</label><textarea id="editorPromptTemplate" spellcheck="false"></textarea><p id="editorPromptCopyStatus" class="prompt-copy-status" role="status" aria-live="polite"></p></div>
+          <button id="returnTextBtn" class="editor-prompt-return" type="button">返回文字编辑 <span aria-hidden="true">→</span></button>
+        </div>
         <div id="richEditor" class="rich-editor" contenteditable="true" role="textbox" aria-multiline="true" aria-label="可直接编辑的速查表内容" spellcheck="true"></div>
         <textarea id="markdownEditor" class="markdown-editor" aria-label="Markdown 源码" spellcheck="false" hidden></textarea>
-        <div class="editor-foot"><span>点击正文可定位右侧预览；草稿箱可载入示例</span><span id="charCount">0 字</span></div>
+        <div id="editorFoot" class="editor-foot"><span>点击正文可定位右侧预览；草稿箱可载入示例</span><span id="charCount">0 字</span></div>
       </div>
     </section>
     <section class="preview-pane" aria-label="多栏排版预览">
@@ -135,6 +163,15 @@
       <div class="zoom-controls" aria-label="预览缩放"><button id="zoomOut" title="缩小">−</button><output id="zoomValue">100%</output><button id="zoomIn" title="放大">＋</button></div>
     </section>
   </main>
+  <div id="tourOverlay" class="tour-overlay" hidden>
+    <div class="tour-blocker" aria-hidden="true"></div>
+    <div id="tourSpotlight" class="tour-spotlight" aria-hidden="true"></div>
+    <div id="tourCard" class="tour-card" role="dialog" aria-modal="true" aria-labelledby="tourTitle" aria-describedby="tourText">
+      <div class="tour-card-top"><span id="tourProgress" class="tour-progress">01 / 06</span><button id="tourCloseBtn" class="tour-close" type="button" aria-label="关闭教学">×</button></div>
+      <h2 id="tourTitle"></h2><p id="tourText"></p>
+      <div class="tour-actions"><button id="tourPrevBtn" type="button">上一步</button><button id="tourNextBtn" type="button">下一步 →</button></div>
+    </div>
+  </div>
   </div>
   <dialog id="draftsDialog" class="drafts-dialog" aria-labelledby="draftsTitle">
     <div class="drafts-head"><div><h2 id="draftsTitle">我的草稿</h2><p>草稿保存在当前浏览器中。</p></div><button id="closeDraftsBtn" class="dialog-close" aria-label="关闭">×</button></div>
@@ -148,10 +185,10 @@
   </dialog>
   <dialog id="formulaDialog" class="formula-dialog" aria-labelledby="formulaTitle">
     <h2 id="formulaTitle">插入公式</h2>
-    <p>输入 LaTeX，例如 <code>\frac{a}{b}</code>、<code>x^2</code>。公式会显示在编辑区和打印预览中。</p>
+    <p>输入 LaTeX，例如 <code>\frac{a}{b}</code>、<code>x^2</code>。也可以先在编辑区选中已有的公式文字，再点“公式”：选中的内容会自动填入下方。</p>
     <label for="formulaInput">公式内容</label>
     <textarea id="formulaInput" rows="3" spellcheck="false"></textarea>
-    <label class="formula-display-choice"><input id="formulaDisplay" type="checkbox"> 独立成行</label>
+    <label class="formula-display-choice"><input id="formulaDisplay" type="checkbox"> 行间公式（独立成行）；不勾选则为行内公式</label>
     <div id="formulaPreview" class="formula-preview" aria-label="公式预览"></div>
     <div class="formula-actions"><button id="formulaCancelBtn" type="button">取消</button><button id="formulaInsertBtn" type="button">插入公式</button></div>
   </dialog>
