@@ -21,6 +21,8 @@ jobs:
       - name: Check out source
         uses: actions/checkout@v4
       - name: Build website from current source
+        env:
+          CLOUDYPAGE_ANALYTICS_TOKEN: 'f9f419420986472d8142c02835c2e9fe'
         run: python3 scripts/build_standalone.py
       - name: Prepare website
         run: |

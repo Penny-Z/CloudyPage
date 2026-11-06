@@ -1,7 +1,8 @@
-"""Create a single offline HTML file from the editable project sources."""
+"""Build a standalone page, optionally with analytics for the hosted site."""
 
 from pathlib import Path
 from base64 import b64encode
+import os
 import re
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -31,6 +32,21 @@ html = html.replace('<link rel="stylesheet" href="vendor/katex.min.css">', f"<st
 html = html.replace('<script src="vendor/katex.min.js"></script>', f"<script>\n{katex_js}\n</script>")
 html = html.replace(css_link, f"<style>\n{css}\n</style>")
 html = html.replace(js_link, f"<script>\n{js}\n</script>")
+
+analytics_token = os.environ.get("CLOUDYPAGE_ANALYTICS_TOKEN")
+if analytics_token:
+    if not re.fullmatch(r"[0-9a-f]{32}", analytics_token):
+        raise ValueError("Invalid Cloudflare Web Analytics token")
+    if html.count("</body>") != 1:
+        raise RuntimeError("Expected exactly one closing body tag")
+    analytics = (
+        '<!-- Cloudflare Web Analytics -->\n'
+        "<script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' "
+        f"""data-cf-beacon='{{"token": "{analytics_token}"}}'></script>\n"""
+        '<!-- End Cloudflare Web Analytics -->\n'
+    )
+    html = html.replace("</body>", analytics + "</body>", 1)
+
 output = DIST / "standalone.html"
 output.write_text(html, encoding="utf-8")
 print(output)
